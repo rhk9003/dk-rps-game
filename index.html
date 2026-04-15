@@ -678,19 +678,23 @@
             margin-bottom: 18px;
             letter-spacing: 2px;
         }
-        .result-countdown {
-            font-size: 24px;
-            color: #2D3142;
+        .btn-back-home {
+            background: #2D3142;
+            color: #FFF;
+            border: 3px solid #FFF;
+            padding: 12px 32px;
+            font-size: 18px;
             font-weight: 800;
-            background: #FFF;
-            padding: 10px 30px;
-            border-radius: 30px;
-            border: 2px solid #2D3142;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #0D0F1A;
+            letter-spacing: 2px;
+            opacity: 0.75;
         }
-        .result-countdown span {
-            color: #E63946;
-            font-weight: 900;
-            font-size: 32px;
+        .btn-back-home:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #0D0F1A;
+            opacity: 1;
         }
 
         /* ===== SCREEN 6: COOLDOWN ===== */
@@ -807,8 +811,7 @@
             .result-scan-hint { font-size: 18px; margin-bottom: 4px; }
             .result-scan-sub { font-size: 13px; margin-bottom: 10px; }
             .result-tomorrow { font-size: 15px; padding: 7px 18px; margin-bottom: 10px; letter-spacing: 1px; border-width: 2px; box-shadow: 0 3px 0 #2D3142; }
-            .result-countdown { font-size: 15px; padding: 6px 18px; }
-            .result-countdown span { font-size: 20px; }
+            .btn-back-home { font-size: 14px; padding: 8px 22px; border-width: 2px; }
 
             /* Cooldown */
             .cooldown-emoji { font-size: 60px; margin-bottom: 12px; }
@@ -982,9 +985,7 @@
     <div class="result-scan-hint">📱 掃描 QR Code 加入 LINE 領獎</div>
     <div class="result-scan-sub">截圖無效，請現場掃描</div>
     <div class="result-tomorrow">🌅 明天再來玩　每天都有新驚喜！</div>
-    <div class="result-countdown">
-        畫面將在 <span id="resultCountdown">30</span> 秒後關閉
-    </div>
+    <button class="btn-back-home" onclick="resetAll()">🏠 店員：回到首頁</button>
 </div>
 
 <!-- ===== SCREEN 6: COOLDOWN ===== -->
@@ -1354,17 +1355,7 @@ function showResult(prize) {
     recordGame(prize.name);
     fireConfetti();
     showScreen('result-screen');
-
-    let remaining = RESULT_DISPLAY_SEC;
-    document.getElementById('resultCountdown').textContent = remaining;
-    const timer = setInterval(() => {
-        remaining--;
-        document.getElementById('resultCountdown').textContent = remaining;
-        if (remaining <= 0) {
-            clearInterval(timer);
-            startCooldown();
-        }
-    }, 1000);
+    // 無倒數 - 等店員按下「回到首頁」再離開
 }
 
 function drawQRPlaceholder(prizeName) {
