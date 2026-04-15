@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>DK 府中店 - 猜拳拿好禮</title>
+    <style>
+        /* ===================================================================
+           DESIGN SYSTEM — 長輩友善 × 活動氛圍
+           主色：溫暖紅 #E63946、金黃 #FFB703、奶油白 #FFF8E7
+           副色：森綠 #06A77D、深棕 #2D3142
+           =================================================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            font-family: 'Microsoft JhengHei', 'Noto Sans TC', 'PingFang TC', sans-serif;
+            background: #FFF8E7;
+            color: #2D3142;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .screen {
+            display: none;
+            width: 100%; height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0; left: 0;
+            padding: 25px;
+        }
+        .screen.active { display: flex; }
+
+        /* ============ Decorative background elements ============ */
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        /* ===== SCREEN 1: WELCOME ===== */
+        #welcome {
+            background:
+                radial-gradient(circle at 10% 20%, #FFD166 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, #FF8FA3 0%, transparent 40%),
+                linear-gradient(135deg, #FFF8E7 0%, #FFE8C8 100%);
+            text-align: center;
+        }
+        .welcome-inner {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .welcome-badge {
+            background: linear-gradient(135deg, #E63946, #D00000);
+            border-radius: 50px;
+            padding: 14px 42px;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: #fff;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(230,57,70,0.35), inset 0 -3px 0 rgba(0,0,0,0.15);
+        }
+        .welcome-title {
+            font-size: 78px;
+            font-weight: 900;
+            color: #2D3142;
+            margin-bottom: 8px;
+            letter-spacing: 4px;
+            text-shadow: 4px 4px 0 #FFB703;
+        }
+        .welcome-sub {
+            font-size: 44px;
+            font-weight: 900;
+            background: linear-gradient(90deg, #E63946, #FFB703);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            letter-spacing: 6px;
+        }
+        .welcome-desc {
+            font-size: 26px;
+            color: #2D3142;
+            margin-bottom: 35px;
+            line-height: 1.8;
+            font-weight: 700;
+        }
+        .welcome-desc .highlight {
+            color: #E63946;
+            font-weight: 900;
+            background: #FFE8A3;
+            padding: 2px 15px;
+            border-radius: 10px;
+        }
+        .welcome-prizes {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 45px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 750px;
+        }
+        .prize-tag {
+            background: #fff;
+            border: 3px solid #2D3142;
+            border-radius: 16px;
+            padding: 14px 24px;
+            font-size: 22px;
+            font-weight: 800;
+            color: #2D3142;
+            box-shadow: 4px 4px 0 #2D3142;
+        }
+        .prize-tag span {
+            color: #E63946;
+            font-weight: 900;
+        }
+        .btn-start {
+            background: linear-gradient(135deg, #E63946, #D00000);
+            border: none;
+            color: #fff;
+            font-size: 42px;
+            font-weight: 900;
+            padding: 28px 90px;
+            border-radius: 80px;
+            cursor: pointer;
+            box-shadow: 0 10px 0 #8B0000, 0 15px 30px rgba(230,57,70,0.4);
+            animation: pulse 1.5s infinite;
+            letter-spacing: 6px;
+            border: 4px solid #fff;
+        }
+        .btn-start:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #8B0000, 0 8px 15px rgba(230,57,70,0.4);
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+
+        /* ===== SCREEN 2: PHONE ===== */
+        #phone-screen {
+            background:
+                radial-gradient(circle at 100% 0%, #FFD166 0%, transparent 35%),
+                radial-gradient(circle at 0% 100%, #A8E6CF 0%, transparent 35%),
+                linear-gradient(135deg, #FFF8E7 0%, #FFEEC2 100%);
+        }
+        .phone-title {
+            font-size: 42px;
+            font-weight: 900;
+            color: #2D3142;
+            margin-bottom: 10px;
+        }
+        .phone-hint {
+            font-size: 22px;
+            color: #E63946;
+            margin-bottom: 25px;
+            font-weight: 800;
+            background: #FFF;
+            padding: 8px 24px;
+            border-radius: 30px;
+            border: 2px dashed #E63946;
+        }
+        .phone-display {
+            background: #fff;
+            border: 4px solid #2D3142;
+            border-radius: 20px;
+            padding: 24px 40px;
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            min-width: 420px;
+            text-align: center;
+            margin-bottom: 20px;
+            min-height: 90px;
+            color: #E63946;
+            box-shadow: 6px 6px 0 #2D3142;
+        }
+        .phone-display.empty {
+            color: #B0B0B0;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        .phone-display.error {
+            border-color: #E63946;
+            background: #FFE0E0;
+            animation: shake 0.5s;
+        }
+        .phone-error-msg {
+            color: #E63946;
+            font-size: 24px;
+            font-weight: 800;
+            min-height: 34px;
+            margin-bottom: 15px;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-12px); }
+            75% { transform: translateX(12px); }
+        }
+
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 110px);
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+        .numpad-btn {
+            width: 110px; height: 90px;
+            font-size: 40px;
+            font-weight: 900;
+            border: 3px solid #2D3142;
+            border-radius: 18px;
+            background: #fff;
+            color: #2D3142;
+            cursor: pointer;
+            transition: all 0.08s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 4px 4px 0 #2D3142;
+        }
+        .numpad-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0 0 0 #2D3142;
+        }
+        /* Zero button: same style as numbers but centered */
+        .numpad-btn.zero {
+            grid-column: 2;
+        }
+        /* Function buttons: CLEARLY different - red/orange bg, smaller text */
+        .fn-btn-clear {
+            grid-column: 1;
+            background: #FFB703 !important;
+            color: #fff !important;
+            font-size: 26px !important;
+        }
+        .fn-btn-back {
+            grid-column: 3;
+            background: #E63946 !important;
+            color: #fff !important;
+            font-size: 34px !important;
+        }
+
+        .btn-phone-submit {
+            background: linear-gradient(135deg, #06A77D, #05876A);
+            border: 4px solid #fff;
+            color: #fff;
+            font-size: 32px;
+            font-weight: 900;
+            padding: 22px 80px;
+            border-radius: 60px;
+            cursor: pointer;
+            min-width: 280px;
+            box-shadow: 0 8px 0 #034F3E, 0 12px 20px rgba(6,167,125,0.3);
+            letter-spacing: 4px;
+        }
+        .btn-phone-submit:active:not(:disabled) {
+            transform: translateY(5px);
+            box-shadow: 0 3px 0 #034F3E;
+        }
+        .btn-phone-submit:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            background: #CCC;
+            box-shadow: 0 8px 0 #999;
+            border-color: #EEE;
+        }
+
+        /* ===== SCREEN 3: RPS ===== */
+        #rps-screen {
+            background:
+                radial-gradient(circle at 0% 0%, #FFD166 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, #FF8FA3 0%, transparent 40%),
+                linear-gradient(135deg, #FFF8E7 0%, #FFEEC2 100%);
+        }
+        .rps-header-bar {
+            width: 100%;
+            max-width: 700px;
+            background: linear-gradient(135deg, #E63946, #D00000);
+            border-radius: 24px;
+            padding: 18px 30px;
+            text-align: center;
+            margin-bottom: 22px;
+            border: 4px solid #fff;
+            box-shadow: 6px 6px 0 #2D3142;
+        }
+        .rps-header-title {
+            font-size: 36px;
+            font-weight: 900;
+            color: #FFF;
+            margin-bottom: 4px;
+            letter-spacing: 3px;
+        }
+        .rps-header-sub {
+            font-size: 20px;
+            color: #FFE8A3;
+            font-weight: 800;
+        }
+
+        .rps-score-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+        .score-box {
+            background: #fff;
+            border-radius: 22px;
+            padding: 14px 36px;
+            text-align: center;
+            min-width: 140px;
+            border: 4px solid #2D3142;
+            box-shadow: 5px 5px 0 #2D3142;
+        }
+        .score-box.player { border-color: #06A77D; box-shadow: 5px 5px 0 #06A77D; }
+        .score-box.cpu { border-color: #E63946; box-shadow: 5px 5px 0 #E63946; }
+        .score-label {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 5px;
+            color: #2D3142;
+        }
+        .score-value {
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1;
+            color: #2D3142;
+        }
+        .score-box.player .score-value { color: #06A77D; }
+        .score-box.cpu .score-value { color: #E63946; }
+        .score-vs {
+            font-size: 38px;
+            font-weight: 900;
+            color: #FFB703;
+            text-shadow: 3px 3px 0 #2D3142;
+        }
+
+        .rps-prize-info {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 22px;
+            width: 100%;
+            max-width: 700px;
+        }
+        .prize-panel {
+            flex: 1;
+            border-radius: 18px;
+            padding: 14px 20px;
+            text-align: center;
+            background: #fff;
+            border: 3px solid #2D3142;
+        }
+        .prize-panel.win {
+            border-color: #06A77D;
+            background: #E8FFF6;
+        }
+        .prize-panel.lose {
+            border-color: #FFB703;
+            background: #FFF5D6;
+        }
+        .prize-panel-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+        .prize-panel.win .prize-panel-title { color: #06A77D; }
+        .prize-panel.lose .prize-panel-title { color: #D88200; }
+        .prize-panel-items {
+            font-size: 16px;
+            color: #2D3142;
+            line-height: 1.6;
+            font-weight: 700;
+        }
+
+        .rps-instruction {
+            font-size: 28px;
+            font-weight: 900;
+            color: #E63946;
+            margin-bottom: 18px;
+            padding: 12px 40px;
+            background: #FFF;
+            border-radius: 50px;
+            border: 3px dashed #E63946;
+            animation: pulseText 1.5s infinite;
+        }
+        @keyframes pulseText {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .rps-choices {
+            display: flex;
+            gap: 25px;
+        }
+        .rps-btn {
+            width: 165px;
+            height: 180px;
+            border: 5px solid #2D3142;
+            border-radius: 26px;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s;
+            box-shadow: 6px 6px 0 #2D3142;
+        }
+        .rps-btn:active {
+            transform: translate(6px, 6px);
+            box-shadow: 0 0 0 #2D3142;
+            background: #FFE8A3;
+            border-color: #E63946;
+        }
+        .rps-btn-emoji { font-size: 82px; line-height: 1; }
+        .rps-btn-text {
+            font-size: 30px;
+            font-weight: 900;
+            color: #2D3142;
+            margin-top: 8px;
+        }
+        .rps-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        /* ===== OVERLAY: Round Result (蓋板畫面) ===== */
+        .round-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(45,49,66,0.96), rgba(230,57,70,0.92));
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            animation: overlayIn 0.3s ease-out;
+        }
+        .round-overlay.active { display: flex; }
+        @keyframes overlayIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .overlay-hands {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            margin-bottom: 35px;
+        }
+        .overlay-hand {
+            font-size: 140px;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #FFF;
+            border-radius: 35px;
+            border: 6px solid #FFB703;
+            box-shadow: 0 10px 0 #D88200;
+            line-height: 1;
+        }
+        .overlay-vs {
+            font-size: 56px;
+            font-weight: 900;
+            color: #FFB703;
+            text-shadow: 4px 4px 0 rgba(0,0,0,0.4);
+        }
+        .overlay-result-label {
+            font-size: 38px;
+            font-weight: 900;
+            color: #FFF;
+            margin-bottom: 15px;
+            letter-spacing: 4px;
+        }
+        .overlay-result-text {
+            font-size: 110px;
+            font-weight: 900;
+            margin-bottom: 18px;
+            letter-spacing: 12px;
+            line-height: 1;
+        }
+        .overlay-result-text.win {
+            color: #FFB703;
+            text-shadow: 6px 6px 0 #2D3142, 0 0 40px rgba(255,183,3,0.8);
+        }
+        .overlay-result-text.lose {
+            color: #A8E6CF;
+            text-shadow: 6px 6px 0 #2D3142;
+        }
+        .overlay-result-text.draw {
+            color: #FFF;
+            text-shadow: 6px 6px 0 #2D3142;
+        }
+        .overlay-sub {
+            font-size: 30px;
+            color: #FFF;
+            font-weight: 800;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 30px;
+            border-radius: 50px;
+        }
+
+        /* ===== SCREEN 4: WHEEL ===== */
+        #wheel-screen {
+            background:
+                radial-gradient(circle at 20% 90%, #FFD166 0%, transparent 40%),
+                radial-gradient(circle at 80% 10%, #FF8FA3 0%, transparent 40%),
+                linear-gradient(135deg, #FFF8E7 0%, #FFEEC2 100%);
+        }
+        .wheel-header-badge {
+            background: linear-gradient(135deg, #FFB703, #D88200);
+            color: #FFF;
+            border-radius: 50px;
+            padding: 14px 40px;
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            letter-spacing: 4px;
+            border: 4px solid #FFF;
+            box-shadow: 0 6px 0 #2D3142;
+        }
+        .wheel-title {
+            font-size: 44px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            color: #2D3142;
+        }
+        .wheel-subtitle {
+            font-size: 24px;
+            color: #2D3142;
+            margin-bottom: 25px;
+            font-weight: 800;
+            background: #FFF;
+            padding: 8px 24px;
+            border-radius: 30px;
+            border: 2px dashed #E63946;
+        }
+        .wheel-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin-bottom: 28px;
+        }
+        .wheel-canvas {
+            width: 400px;
+            height: 400px;
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.2));
+        }
+        .wheel-pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 54px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+            z-index: 10;
+            color: #E63946;
+        }
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #E63946, #D00000);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3), inset 0 -4px 0 rgba(0,0,0,0.2);
+            z-index: 10;
+            color: #FFF;
+            border: 4px solid #FFF;
+        }
+        .btn-spin {
+            background: linear-gradient(135deg, #E63946, #D00000);
+            border: 4px solid #FFF;
+            color: #FFF;
+            font-size: 36px;
+            font-weight: 900;
+            padding: 24px 80px;
+            border-radius: 70px;
+            cursor: pointer;
+            box-shadow: 0 10px 0 #8B0000, 0 15px 25px rgba(0,0,0,0.25);
+            animation: pulse 1.5s infinite;
+            letter-spacing: 6px;
+        }
+        .btn-spin:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #8B0000;
+        }
+        .btn-spin:disabled {
+            opacity: 0.5;
+            animation: none;
+            cursor: not-allowed;
+            background: #AAA;
+            box-shadow: 0 6px 0 #666;
+        }
+
+        /* ===== SCREEN 5: RESULT ===== */
+        #result-screen {
+            background:
+                radial-gradient(circle at 50% 0%, #FFD166 0%, transparent 40%),
+                radial-gradient(circle at 50% 100%, #FF8FA3 0%, transparent 40%),
+                linear-gradient(135deg, #FFF8E7 0%, #FFEEC2 100%);
+            text-align: center;
+        }
+        .result-congrats {
+            font-size: 52px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            color: #2D3142;
+        }
+        .result-prize-name {
+            font-size: 52px;
+            font-weight: 900;
+            color: #FFF;
+            background: linear-gradient(135deg, #E63946, #D00000);
+            padding: 16px 40px;
+            border-radius: 20px;
+            border: 4px solid #FFF;
+            box-shadow: 6px 6px 0 #2D3142;
+            margin-bottom: 28px;
+            letter-spacing: 3px;
+        }
+        .result-qr-box {
+            background: #fff;
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 22px;
+            border: 5px solid #2D3142;
+            box-shadow: 8px 8px 0 #2D3142;
+        }
+        .result-qr-box canvas {
+            display: block;
+        }
+        .result-scan-hint {
+            font-size: 30px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            color: #06A77D;
+        }
+        .result-scan-sub {
+            font-size: 20px;
+            color: #2D3142;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        .result-countdown {
+            font-size: 24px;
+            color: #2D3142;
+            font-weight: 800;
+            background: #FFF;
+            padding: 10px 30px;
+            border-radius: 30px;
+            border: 2px solid #2D3142;
+        }
+        .result-countdown span {
+            color: #E63946;
+            font-weight: 900;
+            font-size: 32px;
+        }
+
+        /* ===== SCREEN 6: COOLDOWN ===== */
+        #cooldown-screen {
+            background:
+                radial-gradient(circle at 50% 50%, #FFD166 0%, transparent 50%),
+                linear-gradient(135deg, #FFF8E7 0%, #FFEEC2 100%);
+            text-align: center;
+        }
+        .cooldown-emoji {
+            font-size: 96px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        .cooldown-text {
+            font-size: 38px;
+            color: #2D3142;
+            margin-bottom: 20px;
+            font-weight: 900;
+        }
+        .cooldown-num {
+            font-size: 140px;
+            font-weight: 900;
+            color: #E63946;
+            line-height: 1;
+            text-shadow: 6px 6px 0 #FFB703;
+        }
+
+        /* ===== LOADING ===== */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(45,49,66,0.85);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .loading-overlay.active { display: flex; }
+        .loading-spinner {
+            width: 70px; height: 70px;
+            border: 6px solid rgba(255,255,255,0.2);
+            border-top-color: #FFB703;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text {
+            font-size: 26px;
+            color: #FFF;
+            font-weight: 800;
+        }
+
+        /* ===== CONFETTI ===== */
+        .confetti-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            overflow: hidden;
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            top: -10px;
+            animation: confettiFall 3s ease-in forwards;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">驗證中...</div>
+</div>
+
+<div class="confetti-container" id="confetti"></div>
+
+<!-- ===== OVERLAY: Round Result ===== -->
+<div class="round-overlay" id="roundOverlay">
+    <div class="overlay-hands">
+        <div class="overlay-hand" id="overlayPlayerHand">✊</div>
+        <div class="overlay-vs">VS</div>
+        <div class="overlay-hand" id="overlayCpuHand">✊</div>
+    </div>
+    <div class="overlay-result-label" id="overlayResultLabel">第 1 局</div>
+    <div class="overlay-result-text" id="overlayResultText">勝利</div>
+    <div class="overlay-sub" id="overlaySub">繼續下一局</div>
+</div>
+
+<!-- ===== SCREEN 1: WELCOME ===== -->
+<div class="screen active" id="welcome">
+    <div class="welcome-inner">
+        <div class="welcome-badge">DK 府中店 限定活動</div>
+        <div class="welcome-title">來玩猜拳</div>
+        <div class="welcome-sub">通通有獎</div>
+        <div class="welcome-desc">
+            剪刀 ✌️　石頭 ✊　布 🖐️<br>
+            <span class="highlight">三戰兩勝</span>　贏了轉大獎　輸了也有禮
+        </div>
+        <div class="welcome-prizes">
+            <div class="prize-tag"><span>200元</span> 折價券</div>
+            <div class="prize-tag"><span>100元</span> 折價券</div>
+            <div class="prize-tag"><span>免費</span> 鞋墊券</div>
+            <div class="prize-tag"><span>50元</span> 折價券</div>
+        </div>
+        <button class="btn-start" onclick="showScreen('phone-screen')">開始遊戲</button>
+    </div>
+</div>
+
+<!-- ===== SCREEN 2: PHONE ===== -->
+<div class="screen" id="phone-screen">
+    <div class="phone-title">請輸入手機號碼</div>
+    <div class="phone-hint">⚠️ 每支手機號碼限玩一次</div>
+    <div class="phone-display empty" id="phoneDisplay">請輸入 10 碼</div>
+    <div class="phone-error-msg" id="phoneError"></div>
+    <div class="numpad">
+        <button class="numpad-btn" onclick="phoneInput('1')">1</button>
+        <button class="numpad-btn" onclick="phoneInput('2')">2</button>
+        <button class="numpad-btn" onclick="phoneInput('3')">3</button>
+        <button class="numpad-btn" onclick="phoneInput('4')">4</button>
+        <button class="numpad-btn" onclick="phoneInput('5')">5</button>
+        <button class="numpad-btn" onclick="phoneInput('6')">6</button>
+        <button class="numpad-btn" onclick="phoneInput('7')">7</button>
+        <button class="numpad-btn" onclick="phoneInput('8')">8</button>
+        <button class="numpad-btn" onclick="phoneInput('9')">9</button>
+        <button class="numpad-btn fn-btn-clear" onclick="phoneClear()">清除</button>
+        <button class="numpad-btn zero" onclick="phoneInput('0')">0</button>
+        <button class="numpad-btn fn-btn-back" onclick="phoneBackspace()">&#9003;</button>
+    </div>
+    <button class="btn-phone-submit" id="phoneSubmitBtn" onclick="submitPhone()" disabled>確認送出</button>
+</div>
+
+<!-- ===== SCREEN 3: RPS ===== -->
+<div class="screen" id="rps-screen">
+    <div class="rps-header-bar">
+        <div class="rps-header-title" id="rpsRoundTitle">第 1 局</div>
+        <div class="rps-header-sub">三戰兩勝　先贏 2 局就過關</div>
+    </div>
+
+    <div class="rps-score-bar">
+        <div class="score-box player">
+            <div class="score-label">你</div>
+            <div class="score-value" id="playerScore">0</div>
+        </div>
+        <div class="score-vs">VS</div>
+        <div class="score-box cpu">
+            <div class="score-label">電腦</div>
+            <div class="score-value" id="cpuScore">0</div>
+        </div>
+    </div>
+
+    <div class="rps-prize-info">
+        <div class="prize-panel win">
+            <div class="prize-panel-title">🏆 贏 → 大獎輪盤</div>
+            <div class="prize-panel-items">200元券 / 100元券 / 鞋墊 / 襪子</div>
+        </div>
+        <div class="prize-panel lose">
+            <div class="prize-panel-title">🎁 輸 → 安慰輪盤</div>
+            <div class="prize-panel-items">50元券 / 購物袋 / 鞋帶 / 保養品</div>
+        </div>
+    </div>
+
+    <div class="rps-instruction">👇 選擇你要出的拳</div>
+
+    <div class="rps-choices" id="rpsChoices">
+        <button class="rps-btn" onclick="playRPS('scissors')">
+            <span class="rps-btn-emoji">✌️</span>
+            <span class="rps-btn-text">剪刀</span>
+        </button>
+        <button class="rps-btn" onclick="playRPS('rock')">
+            <span class="rps-btn-emoji">✊</span>
+            <span class="rps-btn-text">石頭</span>
+        </button>
+        <button class="rps-btn" onclick="playRPS('paper')">
+            <span class="rps-btn-emoji">🖐️</span>
+            <span class="rps-btn-text">布</span>
+        </button>
+    </div>
+</div>
+
+<!-- ===== SCREEN 4: WHEEL ===== -->
+<div class="screen" id="wheel-screen">
+    <div class="wheel-header-badge" id="wheelBadge">🏆 大獎輪盤</div>
+    <div class="wheel-title" id="wheelTitle">恭喜獲勝！</div>
+    <div class="wheel-subtitle" id="wheelSubtitle">按下按鈕轉動輪盤</div>
+    <div class="wheel-container">
+        <div class="wheel-pointer">▼</div>
+        <canvas class="wheel-canvas" id="wheelCanvas" width="400" height="400"></canvas>
+        <div class="wheel-center">GO</div>
+    </div>
+    <button class="btn-spin" id="spinBtn" onclick="spinWheel()">轉動輪盤</button>
+</div>
+
+<!-- ===== SCREEN 5: RESULT ===== -->
+<div class="screen" id="result-screen">
+    <div class="result-congrats">🎉 恭喜獲得</div>
+    <div class="result-prize-name" id="resultPrizeName">200元折價券</div>
+    <div class="result-qr-box">
+        <canvas id="qrCanvas" width="220" height="220"></canvas>
+    </div>
+    <div class="result-scan-hint">📱 掃描 QR Code 加入 LINE 領獎</div>
+    <div class="result-scan-sub">截圖無效，請現場掃描</div>
+    <div class="result-countdown">
+        畫面將在 <span id="resultCountdown">30</span> 秒後關閉
+    </div>
+</div>
+
+<!-- ===== SCREEN 6: COOLDOWN ===== -->
+<div class="screen" id="cooldown-screen">
+    <div class="cooldown-emoji">⏳</div>
+    <div class="cooldown-text">感謝遊玩！下一位請稍等</div>
+    <div class="cooldown-num" id="cooldownNum">10</div>
+</div>
+
+<script>
+// ===================================================================
+//  CONFIG
+// ===================================================================
+const WIN_PRIZES = [
+    { name: '200元折價券', color: '#E63946', prob: 10 },
+    { name: '100元折價券', color: '#06A77D', prob: 25 },
+    { name: '免費鞋墊券',   color: '#FFB703', prob: 30 },
+    { name: '免費襪子券',   color: '#A8E6CF', prob: 35 },
+];
+const LOSE_PRIZES = [
+    { name: '50元折價券',   color: '#E63946', prob: 20 },
+    { name: '購物袋兌換券', color: '#06A77D', prob: 30 },
+    { name: '鞋帶兌換券',   color: '#FFB703', prob: 25 },
+    { name: '保養品體驗組', color: '#A8E6CF', prob: 25 },
+];
+const GAS_URL = '';
+const LINE_QR_URL = 'https://line.me/R/ti/p/@dk-shoes';
+const RESULT_DISPLAY_SEC = 30;
+const COOLDOWN_SEC = 10;
+
+// ===================================================================
+//  STATE
+// ===================================================================
+let phoneNumber = '';
+let playerWins = 0;
+let cpuWins = 0;
+let roundNumber = 1;
+let isRpsLocked = false;
+let isGameWon = false;
+
+const RPS_EMOJI = { rock: '✊', scissors: '✌️', paper: '🖐️' };
+
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+// ===================================================================
+//  PHONE
+// ===================================================================
+function phoneInput(digit) {
+    if (phoneNumber.length >= 10) return;
+    phoneNumber += digit;
+    updatePhoneDisplay();
+}
+function phoneBackspace() {
+    phoneNumber = phoneNumber.slice(0, -1);
+    updatePhoneDisplay();
+}
+function phoneClear() {
+    phoneNumber = '';
+    updatePhoneDisplay();
+}
+function updatePhoneDisplay() {
+    const display = document.getElementById('phoneDisplay');
+    if (phoneNumber.length === 0) {
+        display.textContent = '請輸入 10 碼';
+        display.classList.add('empty');
+    } else {
+        display.classList.remove('empty');
+        let formatted = phoneNumber;
+        if (phoneNumber.length > 4) {
+            formatted = phoneNumber.slice(0,4) + '-' + phoneNumber.slice(4);
+        }
+        if (phoneNumber.length > 7) {
+            formatted = phoneNumber.slice(0,4) + '-' + phoneNumber.slice(4,7) + '-' + phoneNumber.slice(7);
+        }
+        display.textContent = formatted;
+    }
+    display.classList.remove('error');
+    document.getElementById('phoneError').textContent = '';
+    document.getElementById('phoneSubmitBtn').disabled = phoneNumber.length !== 10;
+}
+
+async function submitPhone() {
+    if (phoneNumber.length !== 10 || !phoneNumber.startsWith('09')) {
+        document.getElementById('phoneDisplay').classList.add('error');
+        document.getElementById('phoneError').textContent = '請輸入正確的手機號碼（09 開頭）';
+        return;
+    }
+    if (GAS_URL) {
+        showLoading(true);
+        try {
+            await fetch(GAS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({ action: 'check', phone: phoneNumber })
+            });
+        } catch(e) { console.log('demo mode'); }
+        showLoading(false);
+    }
+    resetRPS();
+    showScreen('rps-screen');
+}
+
+function showLoading(show) {
+    document.getElementById('loading').classList.toggle('active', show);
+}
+
+// ===================================================================
+//  RPS GAME
+// ===================================================================
+function resetRPS() {
+    playerWins = 0;
+    cpuWins = 0;
+    roundNumber = 1;
+    isRpsLocked = false;
+    document.getElementById('playerScore').textContent = '0';
+    document.getElementById('cpuScore').textContent = '0';
+    document.getElementById('rpsRoundTitle').textContent = `第 1 局`;
+    setRpsButtons(true);
+}
+
+function setRpsButtons(enabled) {
+    document.querySelectorAll('.rps-btn').forEach(b => b.disabled = !enabled);
+}
+
+function playRPS(playerChoice) {
+    if (isRpsLocked) return;
+    isRpsLocked = true;
+    setRpsButtons(false);
+
+    const choices = ['rock', 'scissors', 'paper'];
+    const cpuChoice = choices[Math.floor(Math.random() * 3)];
+    const result = getRPSResult(playerChoice, cpuChoice);
+    showRoundOverlay(playerChoice, cpuChoice, result);
+}
+
+function showRoundOverlay(playerChoice, cpuChoice, result) {
+    const overlay = document.getElementById('roundOverlay');
+    const playerHandEl = document.getElementById('overlayPlayerHand');
+    const cpuHandEl = document.getElementById('overlayCpuHand');
+    const labelEl = document.getElementById('overlayResultLabel');
+    const resultTextEl = document.getElementById('overlayResultText');
+    const subEl = document.getElementById('overlaySub');
+
+    playerHandEl.textContent = '✊';
+    cpuHandEl.textContent = '✊';
+    labelEl.textContent = '剪刀、石頭、布！';
+    resultTextEl.textContent = '';
+    resultTextEl.className = 'overlay-result-text';
+    subEl.textContent = '';
+
+    // Add shake animation class to cpu hand
+    cpuHandEl.style.transition = 'transform 0.08s';
+
+    overlay.classList.add('active');
+
+    // Player reveals immediately (玩家已選好)
+    setTimeout(() => {
+        playerHandEl.textContent = RPS_EMOJI[playerChoice];
+        playerHandEl.style.transform = 'scale(1.1)';
+        setTimeout(() => { playerHandEl.style.transform = 'scale(1)'; }, 200);
+    }, 400);
+
+    // CPU 隨機切換拳頭動畫 (1.5秒)
+    const rpsKeys = ['rock', 'scissors', 'paper'];
+    let shuffleCount = 0;
+    const shuffleInterval = setInterval(() => {
+        const randomKey = rpsKeys[Math.floor(Math.random() * 3)];
+        cpuHandEl.textContent = RPS_EMOJI[randomKey];
+        // Shake effect
+        const angle = (Math.random() - 0.5) * 30;
+        const scale = 0.9 + Math.random() * 0.2;
+        cpuHandEl.style.transform = `rotate(${angle}deg) scale(${scale})`;
+        shuffleCount++;
+    }, 90);
+
+    // 揭曉電腦的拳 (1.6秒後停止)
+    setTimeout(() => {
+        clearInterval(shuffleInterval);
+        cpuHandEl.textContent = RPS_EMOJI[cpuChoice];
+        // Bouncy landing
+        cpuHandEl.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        cpuHandEl.style.transform = 'rotate(0deg) scale(1.25)';
+        setTimeout(() => {
+            cpuHandEl.style.transform = 'rotate(0deg) scale(1)';
+        }, 300);
+    }, 1600);
+
+    // Show result
+    setTimeout(() => {
+        let finalText;
+        if (result === 'win') {
+            playerWins++;
+            finalText = '你贏了';
+            resultTextEl.className = 'overlay-result-text win';
+            labelEl.textContent = `第 ${roundNumber} 局`;
+        } else if (result === 'lose') {
+            cpuWins++;
+            finalText = '你輸了';
+            resultTextEl.className = 'overlay-result-text lose';
+            labelEl.textContent = `第 ${roundNumber} 局`;
+        } else {
+            finalText = '平手';
+            resultTextEl.className = 'overlay-result-text draw';
+            labelEl.textContent = `第 ${roundNumber} 局`;
+        }
+        resultTextEl.textContent = finalText;
+        document.getElementById('playerScore').textContent = playerWins;
+        document.getElementById('cpuScore').textContent = cpuWins;
+
+        if (playerWins >= 2 || cpuWins >= 2) {
+            isGameWon = playerWins >= 2;
+            subEl.textContent = isGameWon ? '🎉 恭喜過關！前往大獎輪盤' : '😊 轉安慰輪盤也有禮';
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                goToWheel();
+            }, 2200);
+        } else {
+            const nextRound = (result === 'draw') ? roundNumber : roundNumber + 1;
+            subEl.textContent = `比數 ${playerWins} : ${cpuWins}　準備第 ${nextRound} 局`;
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                if (result !== 'draw') roundNumber++;
+                document.getElementById('rpsRoundTitle').textContent = `第 ${roundNumber} 局`;
+                isRpsLocked = false;
+                setRpsButtons(true);
+            }, 2200);
+        }
+    }, 2100);  // 等電腦揭曉動畫結束（1600ms shuffle + 300ms bounce + 200ms pause）再顯示結果
+}
+
+function getRPSResult(player, cpu) {
+    if (player === cpu) return 'draw';
+    if (
+        (player === 'rock' && cpu === 'scissors') ||
+        (player === 'scissors' && cpu === 'paper') ||
+        (player === 'paper' && cpu === 'rock')
+    ) return 'win';
+    return 'lose';
+}
+
+// ===================================================================
+//  WHEEL
+// ===================================================================
+let wheelRotation = 0;
+let wheelSpinning = false;
+let currentPrizes = [];
+
+function goToWheel() {
+    currentPrizes = isGameWon ? WIN_PRIZES : LOSE_PRIZES;
+    document.getElementById('wheelBadge').textContent = isGameWon ? '🏆 大獎輪盤' : '🎁 安慰輪盤';
+    document.getElementById('wheelTitle').textContent = isGameWon ? '恭喜獲勝！' : '別氣餒！';
+    document.getElementById('wheelSubtitle').textContent = isGameWon ? '大獎等著你 → 按下按鈕轉動' : '通通有獎 → 按下按鈕轉動';
+    wheelRotation = 0;
+    drawWheel(currentPrizes);
+    document.getElementById('spinBtn').disabled = false;
+    showScreen('wheel-screen');
+}
+
+function drawWheel(prizes) {
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const r = 190;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate((wheelRotation * Math.PI) / 180);
+
+    const total = prizes.length;
+    const arc = (2 * Math.PI) / total;
+
+    prizes.forEach((prize, i) => {
+        const startAngle = i * arc - Math.PI / 2;
+        const endAngle = startAngle + arc;
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, r, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = prize.color;
+        ctx.fill();
+        ctx.strokeStyle = '#FFF';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        ctx.save();
+        ctx.rotate(startAngle + arc / 2);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#FFF';
+        ctx.font = 'bold 20px "Microsoft JhengHei"';
+        ctx.shadowColor = 'rgba(0,0,0,0.6)';
+        ctx.shadowBlur = 5;
+
+        const name = prize.name;
+        if (name.length > 5) {
+            ctx.fillText(name.slice(0, Math.ceil(name.length/2)), r * 0.62, -8);
+            ctx.fillText(name.slice(Math.ceil(name.length/2)), r * 0.62, 16);
+        } else {
+            ctx.fillText(name, r * 0.62, 6);
+        }
+        ctx.restore();
+    });
+
+    // Outer ring
+    ctx.beginPath();
+    ctx.arc(0, 0, r + 8, 0, 2 * Math.PI);
+    ctx.strokeStyle = '#2D3142';
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function spinWheel() {
+    if (wheelSpinning) return;
+    wheelSpinning = true;
+    document.getElementById('spinBtn').disabled = true;
+
+    const prizes = currentPrizes;
+    const totalProb = prizes.reduce((s, p) => s + p.prob, 0);
+    let rand = Math.random() * totalProb;
+    let winIndex = 0;
+    for (let i = 0; i < prizes.length; i++) {
+        rand -= prizes[i].prob;
+        if (rand <= 0) { winIndex = i; break; }
+    }
+
+    const sliceAngle = 360 / prizes.length;
+    const targetSliceCenter = winIndex * sliceAngle;
+    const targetAngle = 360 - targetSliceCenter;
+    const extraSpins = 5 * 360;
+    const randomOffset = (Math.random() - 0.5) * (sliceAngle * 0.6);
+    const totalSpin = extraSpins + targetAngle + randomOffset;
+
+    const startRotation = wheelRotation;
+    const duration = 4000;
+    const startTime = performance.now();
+
+    function animate(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        wheelRotation = startRotation + totalSpin * ease;
+        drawWheel(prizes);
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            wheelSpinning = false;
+            setTimeout(() => showResult(prizes[winIndex]), 500);
+        }
+    }
+    requestAnimationFrame(animate);
+}
+
+// ===================================================================
+//  RESULT
+// ===================================================================
+function showResult(prize) {
+    document.getElementById('resultPrizeName').textContent = prize.name;
+    drawQRPlaceholder(prize.name);
+    recordGame(prize.name);
+    fireConfetti();
+    showScreen('result-screen');
+
+    let remaining = RESULT_DISPLAY_SEC;
+    document.getElementById('resultCountdown').textContent = remaining;
+    const timer = setInterval(() => {
+        remaining--;
+        document.getElementById('resultCountdown').textContent = remaining;
+        if (remaining <= 0) {
+            clearInterval(timer);
+            startCooldown();
+        }
+    }, 1000);
+}
+
+function drawQRPlaceholder(prizeName) {
+    const canvas = document.getElementById('qrCanvas');
+    const ctx = canvas.getContext('2d');
+    const size = 220;
+    ctx.fillStyle = '#FFF';
+    ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = '#000';
+    const modules = 21;
+    const moduleSize = (size - 20) / modules;
+    const offset = 10;
+    const seed = prizeName.length * 7 + 42;
+    for (let row = 0; row < modules; row++) {
+        for (let col = 0; col < modules; col++) {
+            const inTopLeft = row < 7 && col < 7;
+            const inTopRight = row < 7 && col >= modules - 7;
+            const inBottomLeft = row >= modules - 7 && col < 7;
+            if (inTopLeft || inTopRight || inBottomLeft) {
+                const lr = row % 7 < 1 || row % 7 > 5 || col % 7 < 1 || col % 7 > 5 ||
+                           (row % 7 >= 2 && row % 7 <= 4 && col % 7 >= 2 && col % 7 <= 4);
+                if (lr) ctx.fillRect(offset + col * moduleSize, offset + row * moduleSize, moduleSize, moduleSize);
+            } else {
+                const hash = ((row * 31 + col * 17 + seed) * 2654435761) >>> 0;
+                if (hash % 3 !== 0) ctx.fillRect(offset + col * moduleSize, offset + row * moduleSize, moduleSize, moduleSize);
+            }
+        }
+    }
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    ctx.fillRect(size/2 - 50, size/2 - 13, 100, 26);
+    ctx.fillStyle = '#FFF';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('DEMO QR', size/2, size/2 + 4);
+}
+
+async function recordGame(prizeName) {
+    if (!GAS_URL) {
+        console.log('Demo:', { phone: phoneNumber, result: isGameWon ? '勝' : '敗', prize: prizeName });
+        return;
+    }
+    try {
+        await fetch(GAS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({
+                action: 'record', phone: phoneNumber,
+                result: isGameWon ? '勝' : '敗', prize: prizeName,
+                timestamp: new Date().toISOString()
+            })
+        });
+    } catch(e) { console.error('Record failed:', e); }
+}
+
+function fireConfetti() {
+    const container = document.getElementById('confetti');
+    container.innerHTML = '';
+    const colors = ['#E63946', '#06A77D', '#FFB703', '#A8E6CF', '#FF8FA3', '#FFD166'];
+    for (let i = 0; i < 80; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + '%';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = Math.random() * 1 + 's';
+        piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+        piece.style.width = (10 + Math.random() * 10) + 'px';
+        piece.style.height = (10 + Math.random() * 10) + 'px';
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        container.appendChild(piece);
+    }
+    setTimeout(() => container.innerHTML = '', 4000);
+}
+
+// ===================================================================
+//  COOLDOWN
+// ===================================================================
+function startCooldown() {
+    showScreen('cooldown-screen');
+    let remaining = COOLDOWN_SEC;
+    document.getElementById('cooldownNum').textContent = remaining;
+    const timer = setInterval(() => {
+        remaining--;
+        document.getElementById('cooldownNum').textContent = remaining;
+        if (remaining <= 0) {
+            clearInterval(timer);
+            resetAll();
+        }
+    }, 1000);
+}
+
+function resetAll() {
+    phoneNumber = '';
+    playerWins = 0;
+    cpuWins = 0;
+    roundNumber = 1;
+    isRpsLocked = false;
+    isGameWon = false;
+    wheelRotation = 0;
+    updatePhoneDisplay();
+    showScreen('welcome');
+}
+
+drawWheel(WIN_PRIZES);
+</script>
+
+</body>
+</html>
