@@ -7,15 +7,15 @@
     <style>
         /* ===================================================================
            DESIGN SYSTEM — 長輩友善 × 活動氛圍
-           主色：溫暖紅 #E63946、金黃 #FFB703、奶油白 #FFF8E7
-           副色：森綠 #06A77D、深棕 #2D3142
+           主色：溫暖紅 #e41e07、金黃 #1198cd、奶油白 #ece0d8
+           副色：森綠 #1198cd、深棕 #2D3142
            =================================================================== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
             width: 100%; height: 100%;
             overflow: hidden;
             font-family: 'Microsoft JhengHei', 'Noto Sans TC', 'PingFang TC', sans-serif;
-            background: #FFF8E7;
+            background: #ece0d8;
             color: #2D3142;
             touch-action: manipulation;
             -webkit-user-select: none;
@@ -46,9 +46,9 @@
         /* ===== SCREEN 1: WELCOME ===== */
         #welcome {
             background:
-                radial-gradient(circle at 10% 20%, #FFD166 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, #FF8FA3 0%, transparent 40%),
-                linear-gradient(135deg, #FFF8E7 0%, #FFE8C8 100%);
+                radial-gradient(circle at 10% 20%, rgba(17,152,205,0.35) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(228,30,7,0.25) 0%, transparent 45%),
+                linear-gradient(135deg, #ece0d8 0%, #dbcfc0 100%);
             text-align: center;
         }
         .welcome-inner {
@@ -59,34 +59,109 @@
             align-items: center;
         }
         .welcome-badge {
-            background: linear-gradient(135deg, #E63946, #D00000);
+            background: linear-gradient(135deg, #e41e07, #940201);
             border-radius: 50px;
             padding: 14px 42px;
             font-size: 22px;
             font-weight: 900;
             letter-spacing: 3px;
             color: #fff;
-            margin-bottom: 25px;
-            box-shadow: 0 6px 20px rgba(230,57,70,0.35), inset 0 -3px 0 rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+            box-shadow: 0 6px 20px rgba(228,30,7,0.35), inset 0 -3px 0 rgba(0,0,0,0.15);
+        }
+        .welcome-lead {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+            font-size: 26px;
+            font-weight: 900;
+            color: #940201;
+            letter-spacing: 2px;
+        }
+        .welcome-lead .hand {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 58px;
+            height: 58px;
+            font-size: 36px;
+            background: #fff;
+            border-radius: 50%;
+            border: 4px solid #940201;
+            box-shadow: 0 4px 0 #940201;
+            animation: handBounce 1.8s infinite ease-in-out;
+        }
+        .welcome-lead .hand.h2 { animation-delay: 0.2s; border-color: #e41e07; box-shadow: 0 4px 0 #e41e07; }
+        .welcome-lead .hand.h3 { animation-delay: 0.4s; border-color: #1198cd; box-shadow: 0 4px 0 #1198cd; }
+        @keyframes handBounce {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-8px) rotate(3deg); }
         }
         .welcome-title {
-            font-size: 78px;
+            position: relative;
+            font-size: 82px;
             font-weight: 900;
-            color: #2D3142;
-            margin-bottom: 8px;
+            color: #e41e07;
+            margin-bottom: 38px;
             letter-spacing: 4px;
-            text-shadow: 4px 4px 0 #FFB703;
+            line-height: 1;
+            animation: titleBounce 2s infinite ease-in-out;
+            display: inline-block;
+            padding: 10px 24px;
+            background: #fff;
+            border: 4px solid #940201;
+            border-radius: 16px;
+            box-shadow: 0 6px 0 #940201;
+        }
+        .welcome-title::before {
+            content: '✨';
+            position: absolute;
+            top: -22px; right: -18px;
+            font-size: 42px;
+            animation: sparkle 1.4s infinite;
+        }
+        .welcome-title::after {
+            content: '✨';
+            position: absolute;
+            bottom: -6px; left: -22px;
+            font-size: 36px;
+            animation: sparkle 1.4s infinite 0.7s;
+        }
+        @keyframes titleBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.4) rotate(180deg); opacity: 0.7; }
         }
         .welcome-sub {
-            font-size: 44px;
+            display: inline-block;
+            font-size: 28px;
             font-weight: 900;
-            background: linear-gradient(90deg, #E63946, #FFB703);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
-            letter-spacing: 6px;
+            color: #fff;
+            background: linear-gradient(135deg, #1198cd, #0a6d85);
+            padding: 8px 38px;
+            border-radius: 50px;
+            letter-spacing: 8px;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 0 #083c49, 0 0 0 2px #1198cd;
+            margin-bottom: 28px;
+            position: relative;
         }
+        .welcome-sub::before,
+        .welcome-sub::after {
+            content: '★';
+            font-size: 22px;
+            color: #ece0d8;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .welcome-sub::before { left: 14px; }
+        .welcome-sub::after { right: 14px; }
         .welcome-desc {
             font-size: 26px;
             color: #2D3142;
@@ -95,9 +170,9 @@
             font-weight: 700;
         }
         .welcome-desc .highlight {
-            color: #E63946;
+            color: #fff;
             font-weight: 900;
-            background: #FFE8A3;
+            background: #e41e07;
             padding: 2px 15px;
             border-radius: 10px;
         }
@@ -120,11 +195,11 @@
             box-shadow: 4px 4px 0 #2D3142;
         }
         .prize-tag span {
-            color: #E63946;
+            color: #e41e07;
             font-weight: 900;
         }
         .btn-start {
-            background: linear-gradient(135deg, #E63946, #D00000);
+            background: linear-gradient(135deg, #e41e07, #940201);
             border: none;
             color: #fff;
             font-size: 42px;
@@ -132,14 +207,14 @@
             padding: 28px 90px;
             border-radius: 80px;
             cursor: pointer;
-            box-shadow: 0 10px 0 #8B0000, 0 15px 30px rgba(230,57,70,0.4);
+            box-shadow: 0 10px 0 #530101, 0 15px 30px rgba(230,57,70,0.4);
             animation: pulse 1.5s infinite;
             letter-spacing: 6px;
             border: 4px solid #fff;
         }
         .btn-start:active {
             transform: translateY(6px);
-            box-shadow: 0 4px 0 #8B0000, 0 8px 15px rgba(230,57,70,0.4);
+            box-shadow: 0 4px 0 #530101, 0 8px 15px rgba(230,57,70,0.4);
         }
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
@@ -149,9 +224,9 @@
         /* ===== SCREEN 2: PHONE ===== */
         #phone-screen {
             background:
-                radial-gradient(circle at 100% 0%, #FFD166 0%, transparent 35%),
-                radial-gradient(circle at 0% 100%, #A8E6CF 0%, transparent 35%),
-                linear-gradient(135deg, #FFF8E7 0%, #FFEEC2 100%);
+                radial-gradient(circle at 100% 0%, #b8dff0 0%, transparent 35%),
+                radial-gradient(circle at 0% 100%, #b8dff0 0%, transparent 35%),
+                linear-gradient(135deg, #ece0d8 0%, #dbcfc0 100%);
             padding: 12px;
             justify-content: flex-start;
             padding-top: 20px;
@@ -164,13 +239,13 @@
         }
         .phone-hint {
             font-size: 15px;
-            color: #E63946;
+            color: #e41e07;
             margin-bottom: 12px;
             font-weight: 800;
             background: #FFF;
             padding: 5px 16px;
             border-radius: 30px;
-            border: 2px dashed #E63946;
+            border: 2px dashed #e41e07;
         }
         .phone-display {
             background: #fff;
@@ -185,7 +260,7 @@
             text-align: center;
             margin-bottom: 8px;
             min-height: 58px;
-            color: #E63946;
+            color: #e41e07;
             box-shadow: 4px 4px 0 #2D3142;
         }
         .phone-display.empty {
@@ -195,12 +270,12 @@
             letter-spacing: 1px;
         }
         .phone-display.error {
-            border-color: #E63946;
+            border-color: #e41e07;
             background: #FFE0E0;
             animation: shake 0.5s;
         }
         .phone-error-msg {
-            color: #E63946;
+            color: #e41e07;
             font-size: 15px;
             font-weight: 800;
             min-height: 20px;
@@ -245,19 +320,19 @@
         }
         .fn-btn-clear {
             grid-column: 1;
-            background: #FFB703 !important;
+            background: #1198cd !important;
             color: #fff !important;
             font-size: 18px !important;
         }
         .fn-btn-back {
             grid-column: 3;
-            background: #E63946 !important;
+            background: #e41e07 !important;
             color: #fff !important;
             font-size: 24px !important;
         }
 
         .btn-phone-submit {
-            background: linear-gradient(135deg, #06A77D, #05876A);
+            background: linear-gradient(135deg, #1198cd, #0a6d85);
             border: 3px solid #fff;
             color: #fff;
             font-size: 22px;
@@ -266,12 +341,12 @@
             border-radius: 50px;
             cursor: pointer;
             min-width: 220px;
-            box-shadow: 0 6px 0 #034F3E, 0 10px 15px rgba(6,167,125,0.3);
+            box-shadow: 0 6px 0 #083c49, 0 10px 15px rgba(6,167,125,0.3);
             letter-spacing: 3px;
         }
         .btn-phone-submit:active:not(:disabled) {
             transform: translateY(4px);
-            box-shadow: 0 2px 0 #034F3E;
+            box-shadow: 0 2px 0 #083c49;
         }
         .btn-phone-submit:disabled {
             opacity: 0.35;
@@ -284,14 +359,14 @@
         /* ===== SCREEN 3: RPS ===== */
         #rps-screen {
             background:
-                radial-gradient(circle at 0% 0%, #FFD166 0%, transparent 40%),
-                radial-gradient(circle at 100% 100%, #FF8FA3 0%, transparent 40%),
-                linear-gradient(135deg, #FFF8E7 0%, #FFEEC2 100%);
+                radial-gradient(circle at 0% 0%, #b8dff0 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, #f3a89c 0%, transparent 40%),
+                linear-gradient(135deg, #ece0d8 0%, #dbcfc0 100%);
         }
         .rps-header-bar {
             width: 100%;
             max-width: 700px;
-            background: linear-gradient(135deg, #E63946, #D00000);
+            background: linear-gradient(135deg, #e41e07, #940201);
             border-radius: 24px;
             padding: 18px 30px;
             text-align: center;
@@ -308,7 +383,7 @@
         }
         .rps-header-sub {
             font-size: 20px;
-            color: #FFE8A3;
+            color: #ece0d8;
             font-weight: 800;
         }
 
@@ -328,8 +403,8 @@
             border: 4px solid #2D3142;
             box-shadow: 5px 5px 0 #2D3142;
         }
-        .score-box.player { border-color: #06A77D; box-shadow: 5px 5px 0 #06A77D; }
-        .score-box.cpu { border-color: #E63946; box-shadow: 5px 5px 0 #E63946; }
+        .score-box.player { border-color: #1198cd; box-shadow: 5px 5px 0 #1198cd; }
+        .score-box.cpu { border-color: #e41e07; box-shadow: 5px 5px 0 #e41e07; }
         .score-label {
             font-size: 22px;
             font-weight: 900;
@@ -342,13 +417,12 @@
             line-height: 1;
             color: #2D3142;
         }
-        .score-box.player .score-value { color: #06A77D; }
-        .score-box.cpu .score-value { color: #E63946; }
+        .score-box.player .score-value { color: #1198cd; }
+        .score-box.cpu .score-value { color: #e41e07; }
         .score-vs {
             font-size: 38px;
             font-weight: 900;
-            color: #FFB703;
-            text-shadow: 3px 3px 0 #2D3142;
+            color: #2D3142;
         }
 
         .rps-prize-info {
@@ -367,20 +441,20 @@
             border: 3px solid #2D3142;
         }
         .prize-panel.win {
-            border-color: #06A77D;
-            background: #E8FFF6;
+            border-color: #e41e07;
+            background: #fdecea;
         }
         .prize-panel.lose {
-            border-color: #FFB703;
-            background: #FFF5D6;
+            border-color: #1198cd;
+            background: #e8f2f7;
         }
         .prize-panel-title {
             font-size: 22px;
             font-weight: 900;
             margin-bottom: 6px;
         }
-        .prize-panel.win .prize-panel-title { color: #06A77D; }
-        .prize-panel.lose .prize-panel-title { color: #D88200; }
+        .prize-panel.win .prize-panel-title { color: #e41e07; }
+        .prize-panel.lose .prize-panel-title { color: #1198cd; }
         .prize-panel-items {
             font-size: 16px;
             color: #2D3142;
@@ -391,12 +465,12 @@
         .rps-instruction {
             font-size: 28px;
             font-weight: 900;
-            color: #E63946;
+            color: #e41e07;
             margin-bottom: 18px;
             padding: 12px 40px;
             background: #FFF;
             border-radius: 50px;
-            border: 3px dashed #E63946;
+            border: 3px dashed #e41e07;
             animation: pulseText 1.5s infinite;
         }
         @keyframes pulseText {
@@ -424,8 +498,8 @@
         .rps-btn:active {
             transform: translate(6px, 6px);
             box-shadow: 0 0 0 #2D3142;
-            background: #FFE8A3;
-            border-color: #E63946;
+            background: #ece0d8;
+            border-color: #e41e07;
         }
         .rps-btn-emoji { font-size: 82px; line-height: 1; }
         .rps-btn-text {
@@ -445,7 +519,7 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(45,49,66,0.96), rgba(230,57,70,0.92));
+            background: linear-gradient(135deg, rgba(148,2,1,0.96), rgba(228,30,7,0.92));
             z-index: 500;
             align-items: center;
             justify-content: center;
@@ -472,15 +546,14 @@
             justify-content: center;
             background: #FFF;
             border-radius: 35px;
-            border: 6px solid #FFB703;
-            box-shadow: 0 10px 0 #D88200;
+            border: 6px solid #1198cd;
+            box-shadow: 0 10px 0 #0a6d85;
             line-height: 1;
         }
         .overlay-vs {
             font-size: 56px;
             font-weight: 900;
-            color: #FFB703;
-            text-shadow: 4px 4px 0 rgba(0,0,0,0.4);
+            color: #fff;
         }
         .overlay-result-label {
             font-size: 38px;
@@ -490,23 +563,34 @@
             letter-spacing: 4px;
         }
         .overlay-result-text {
-            font-size: 110px;
+            font-size: 76px;
             font-weight: 900;
             margin-bottom: 18px;
-            letter-spacing: 12px;
-            line-height: 1;
+            letter-spacing: 6px;
+            line-height: 1.15;
+            max-width: 95vw;
+            text-align: center;
         }
         .overlay-result-text.win {
-            color: #FFB703;
-            text-shadow: 6px 6px 0 #2D3142, 0 0 40px rgba(255,183,3,0.8);
+            color: #fff;
+            background: #1198cd;
+            padding: 10px 28px;
+            border-radius: 18px;
+            border: 4px solid #fff;
         }
         .overlay-result-text.lose {
-            color: #A8E6CF;
-            text-shadow: 6px 6px 0 #2D3142;
+            color: #fff;
+            background: #940201;
+            padding: 10px 28px;
+            border-radius: 18px;
+            border: 4px solid #fff;
         }
         .overlay-result-text.draw {
-            color: #FFF;
-            text-shadow: 6px 6px 0 #2D3142;
+            color: #2D3142;
+            background: #ece0d8;
+            padding: 10px 28px;
+            border-radius: 18px;
+            border: 4px solid #fff;
         }
         .overlay-sub {
             font-size: 30px;
@@ -520,12 +604,12 @@
         /* ===== SCREEN 4: WHEEL ===== */
         #wheel-screen {
             background:
-                radial-gradient(circle at 20% 90%, #FFD166 0%, transparent 40%),
-                radial-gradient(circle at 80% 10%, #FF8FA3 0%, transparent 40%),
-                linear-gradient(135deg, #FFF8E7 0%, #FFEEC2 100%);
+                radial-gradient(circle at 20% 90%, #b8dff0 0%, transparent 40%),
+                radial-gradient(circle at 80% 10%, #f3a89c 0%, transparent 40%),
+                linear-gradient(135deg, #ece0d8 0%, #dbcfc0 100%);
         }
         .wheel-header-badge {
-            background: linear-gradient(135deg, #FFB703, #D88200);
+            background: linear-gradient(135deg, #1198cd, #0a6d85);
             color: #FFF;
             border-radius: 50px;
             padding: 14px 40px;
@@ -550,7 +634,7 @@
             background: #FFF;
             padding: 8px 24px;
             border-radius: 30px;
-            border: 2px dashed #E63946;
+            border: 2px dashed #e41e07;
         }
         .wheel-container {
             position: relative;
@@ -571,7 +655,7 @@
             font-size: 54px;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
             z-index: 10;
-            color: #E63946;
+            color: #e41e07;
         }
         .wheel-center {
             position: absolute;
@@ -580,7 +664,7 @@
             transform: translate(-50%, -50%);
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #E63946, #D00000);
+            background: linear-gradient(135deg, #e41e07, #940201);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -593,7 +677,7 @@
             border: 4px solid #FFF;
         }
         .btn-spin {
-            background: linear-gradient(135deg, #E63946, #D00000);
+            background: linear-gradient(135deg, #e41e07, #940201);
             border: 4px solid #FFF;
             color: #FFF;
             font-size: 36px;
@@ -601,13 +685,13 @@
             padding: 24px 80px;
             border-radius: 70px;
             cursor: pointer;
-            box-shadow: 0 10px 0 #8B0000, 0 15px 25px rgba(0,0,0,0.25);
+            box-shadow: 0 10px 0 #530101, 0 15px 25px rgba(0,0,0,0.25);
             animation: pulse 1.5s infinite;
             letter-spacing: 6px;
         }
         .btn-spin:active {
             transform: translateY(6px);
-            box-shadow: 0 4px 0 #8B0000;
+            box-shadow: 0 4px 0 #530101;
         }
         .btn-spin:disabled {
             opacity: 0.5;
@@ -620,9 +704,9 @@
         /* ===== SCREEN 5: RESULT ===== */
         #result-screen {
             background:
-                radial-gradient(circle at 50% 0%, #FFD166 0%, transparent 40%),
-                radial-gradient(circle at 50% 100%, #FF8FA3 0%, transparent 40%),
-                linear-gradient(135deg, #FFF8E7 0%, #FFEEC2 100%);
+                radial-gradient(circle at 50% 0%, #b8dff0 0%, transparent 40%),
+                radial-gradient(circle at 50% 100%, #f3a89c 0%, transparent 40%),
+                linear-gradient(135deg, #ece0d8 0%, #dbcfc0 100%);
             text-align: center;
         }
         .result-congrats {
@@ -635,7 +719,7 @@
             font-size: 52px;
             font-weight: 900;
             color: #FFF;
-            background: linear-gradient(135deg, #E63946, #D00000);
+            background: linear-gradient(135deg, #e41e07, #940201);
             padding: 16px 40px;
             border-radius: 20px;
             border: 4px solid #FFF;
@@ -658,7 +742,7 @@
             font-size: 30px;
             font-weight: 900;
             margin-bottom: 8px;
-            color: #06A77D;
+            color: #1198cd;
         }
         .result-scan-sub {
             font-size: 20px;
@@ -670,7 +754,7 @@
             font-size: 22px;
             font-weight: 900;
             color: #FFF;
-            background: linear-gradient(135deg, #FFB703, #D88200);
+            background: linear-gradient(135deg, #1198cd, #0a6d85);
             padding: 10px 28px;
             border-radius: 40px;
             border: 3px solid #FFF;
@@ -700,8 +784,8 @@
         /* ===== SCREEN 6: COOLDOWN ===== */
         #cooldown-screen {
             background:
-                radial-gradient(circle at 50% 50%, #FFD166 0%, transparent 50%),
-                linear-gradient(135deg, #FFF8E7 0%, #FFEEC2 100%);
+                radial-gradient(circle at 50% 50%, #b8dff0 0%, transparent 50%),
+                linear-gradient(135deg, #ece0d8 0%, #dbcfc0 100%);
             text-align: center;
         }
         .cooldown-emoji {
@@ -718,9 +802,8 @@
         .cooldown-num {
             font-size: 140px;
             font-weight: 900;
-            color: #E63946;
+            color: #e41e07;
             line-height: 1;
-            text-shadow: 6px 6px 0 #FFB703;
         }
 
         /* ===== LOADING ===== */
@@ -739,7 +822,7 @@
         .loading-spinner {
             width: 70px; height: 70px;
             border: 6px solid rgba(255,255,255,0.2);
-            border-top-color: #FFB703;
+            border-top-color: #1198cd;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
             margin-bottom: 20px;
@@ -758,13 +841,18 @@
             .screen { padding: 10px; }
 
             /* Welcome */
-            .welcome-badge { font-size: 15px; padding: 8px 22px; margin-bottom: 14px; letter-spacing: 2px; }
-            .welcome-title { font-size: 46px; margin-bottom: 4px; text-shadow: 2px 2px 0 #FFB703; }
-            .welcome-sub { font-size: 28px; margin-bottom: 12px; letter-spacing: 3px; }
+            .welcome-badge { font-size: 15px; padding: 8px 22px; margin-bottom: 16px; letter-spacing: 2px; }
+            .welcome-lead { font-size: 16px; gap: 8px; margin-bottom: 22px; letter-spacing: 1px; }
+            .welcome-lead .hand { width: 40px; height: 40px; font-size: 24px; border-width: 3px; box-shadow: 0 3px 0 currentColor; }
+            .welcome-title { font-size: 50px; margin-bottom: 26px; letter-spacing: 2px; padding: 8px 18px; border-width: 3px; border-radius: 14px; box-shadow: 0 5px 0 #940201; }
+            .welcome-title::before { font-size: 26px; top: -14px; right: -10px; }
+            .welcome-title::after { font-size: 22px; bottom: -2px; left: -12px; }
+            .welcome-sub { font-size: 20px; padding: 6px 30px; letter-spacing: 5px; margin-bottom: 20px; border-width: 2px; box-shadow: 0 3px 0 #083c49, 0 0 0 2px #1198cd; }
+            .welcome-sub::before, .welcome-sub::after { font-size: 14px; }
             .welcome-desc { font-size: 16px; margin-bottom: 18px; line-height: 1.6; }
             .welcome-prizes { gap: 8px; margin-bottom: 22px; }
             .prize-tag { font-size: 14px; padding: 6px 12px; border-width: 2px; box-shadow: 3px 3px 0 #2D3142; }
-            .btn-start { font-size: 26px; padding: 16px 48px; letter-spacing: 3px; box-shadow: 0 6px 0 #8B0000, 0 10px 20px rgba(230,57,70,0.4); }
+            .btn-start { font-size: 26px; padding: 16px 48px; letter-spacing: 3px; box-shadow: 0 6px 0 #530101, 0 10px 20px rgba(230,57,70,0.4); }
 
             /* RPS */
             .rps-header-bar { padding: 10px 18px; margin-bottom: 10px; border-width: 3px; box-shadow: 4px 4px 0 #2D3142; }
@@ -787,10 +875,10 @@
 
             /* Overlay */
             .overlay-hands { gap: 20px; margin-bottom: 20px; }
-            .overlay-hand { font-size: 82px; width: 130px; height: 130px; border-width: 4px; box-shadow: 0 6px 0 #D88200; border-radius: 22px; }
+            .overlay-hand { font-size: 82px; width: 130px; height: 130px; border-width: 4px; box-shadow: 0 6px 0 #0a6d85; border-radius: 22px; }
             .overlay-vs { font-size: 32px; }
             .overlay-result-label { font-size: 22px; margin-bottom: 8px; letter-spacing: 2px; }
-            .overlay-result-text { font-size: 64px; margin-bottom: 10px; letter-spacing: 6px; text-shadow: 4px 4px 0 #2D3142 !important; }
+            .overlay-result-text { font-size: 34px; margin-bottom: 10px; letter-spacing: 2px; line-height: 1.2; padding: 8px 18px !important; border-radius: 14px !important; }
             .overlay-sub { font-size: 17px; padding: 6px 18px; }
 
             /* Wheel */
@@ -801,7 +889,7 @@
             .wheel-canvas { width: 280px; height: 280px; }
             .wheel-pointer { font-size: 38px; top: -8px; }
             .wheel-center { width: 56px; height: 56px; font-size: 15px; border-width: 3px; }
-            .btn-spin { font-size: 22px; padding: 14px 44px; letter-spacing: 3px; box-shadow: 0 6px 0 #8B0000, 0 10px 15px rgba(0,0,0,0.25); }
+            .btn-spin { font-size: 22px; padding: 14px 44px; letter-spacing: 3px; box-shadow: 0 6px 0 #530101, 0 10px 15px rgba(0,0,0,0.25); }
 
             /* Result */
             .result-congrats { font-size: 32px; margin-bottom: 6px; }
@@ -816,13 +904,15 @@
             /* Cooldown */
             .cooldown-emoji { font-size: 60px; margin-bottom: 12px; }
             .cooldown-text { font-size: 24px; margin-bottom: 10px; }
-            .cooldown-num { font-size: 96px; text-shadow: 4px 4px 0 #FFB703; }
+            .cooldown-num { font-size: 96px; }
         }
 
         /* 極窄螢幕 (< 380px) - iPhone SE 等 */
         @media (max-width: 380px) {
-            .welcome-title { font-size: 38px; }
-            .welcome-sub { font-size: 24px; }
+            .welcome-lead { font-size: 14px; gap: 5px; }
+            .welcome-lead .hand { width: 34px; height: 34px; font-size: 20px; }
+            .welcome-title { font-size: 54px; letter-spacing: 1px; }
+            .welcome-sub { font-size: 19px; padding: 6px 28px; letter-spacing: 4px; }
             .rps-btn { width: 88px; height: 100px; }
             .rps-btn-emoji { font-size: 44px; }
             .wheel-container, .wheel-canvas { width: 250px; height: 250px; }
@@ -875,11 +965,15 @@
 <div class="screen active" id="welcome">
     <div class="welcome-inner">
         <div class="welcome-badge">DK 府中店 限定活動</div>
-        <div class="welcome-title">來玩猜拳</div>
-        <div class="welcome-sub">通通有獎</div>
+        <div class="welcome-lead">
+            <span class="hand h1">✌️</span>剪刀
+            <span class="hand h2">✊</span>石頭
+            <span class="hand h3">🖐️</span>布
+        </div>
+        <div class="welcome-title">和我玩猜拳</div>
+        <div class="welcome-sub">三戰二勝</div>
         <div class="welcome-desc">
-            剪刀 ✌️　石頭 ✊　布 🖐️<br>
-            <span class="highlight">三戰兩勝</span>　贏了轉大獎　輸了也有禮
+            不論輸贏，<span class="highlight">都有機會拿好禮</span>
         </div>
         <div class="welcome-prizes">
             <div class="prize-tag"><span>200元</span> 折價券</div>
@@ -918,7 +1012,7 @@
 <div class="screen" id="rps-screen">
     <div class="rps-header-bar">
         <div class="rps-header-title" id="rpsRoundTitle">第 1 局</div>
-        <div class="rps-header-sub">三戰兩勝　先贏 2 局就過關</div>
+        <div class="rps-header-sub">取得 2 勝，就有機會贏大獎</div>
     </div>
 
     <div class="rps-score-bar">
@@ -944,7 +1038,7 @@
         </div>
     </div>
 
-    <div class="rps-instruction">👇 選擇你要出的拳</div>
+    <div class="rps-instruction">請出拳 👇</div>
 
     <div class="rps-choices" id="rpsChoices">
         <button class="rps-btn" onclick="playRPS('scissors')">
@@ -1000,16 +1094,16 @@
 //  CONFIG
 // ===================================================================
 const WIN_PRIZES = [
-    { name: '200元折價券', color: '#E63946', prob: 10 },
-    { name: '100元折價券', color: '#06A77D', prob: 25 },
-    { name: '免費鞋墊券',   color: '#FFB703', prob: 30 },
-    { name: '免費襪子券',   color: '#A8E6CF', prob: 35 },
+    { name: '200元折價券', color: '#940201', prob: 10 },
+    { name: '100元折價券', color: '#e41e07', prob: 25 },
+    { name: '免費鞋墊券',   color: '#1198cd', prob: 30 },
+    { name: '免費襪子券',   color: '#0a6d85', prob: 35 },
 ];
 const LOSE_PRIZES = [
-    { name: '50元折價券',   color: '#E63946', prob: 20 },
-    { name: '購物袋兌換券', color: '#06A77D', prob: 30 },
-    { name: '鞋帶兌換券',   color: '#FFB703', prob: 25 },
-    { name: '保養品體驗組', color: '#A8E6CF', prob: 25 },
+    { name: '50元折價券',   color: '#940201', prob: 20 },
+    { name: '購物袋兌換券', color: '#e41e07', prob: 30 },
+    { name: '鞋帶兌換券',   color: '#1198cd', prob: 25 },
+    { name: '保養品體驗組', color: '#0a6d85', prob: 25 },
 ];
 const GAS_URL = '';
 const LINE_QR_URL = 'https://line.me/R/ti/p/@dk-shoes';
@@ -1182,12 +1276,12 @@ function showRoundOverlay(playerChoice, cpuChoice, result) {
         let finalText;
         if (result === 'win') {
             playerWins++;
-            finalText = '你贏了';
+            finalText = '恭喜，你贏了';
             resultTextEl.className = 'overlay-result-text win';
             labelEl.textContent = `第 ${roundNumber} 局`;
         } else if (result === 'lose') {
             cpuWins++;
-            finalText = '你輸了';
+            finalText = '😢 哎呀!! 你輸了';
             resultTextEl.className = 'overlay-result-text lose';
             labelEl.textContent = `第 ${roundNumber} 局`;
         } else {
@@ -1201,7 +1295,7 @@ function showRoundOverlay(playerChoice, cpuChoice, result) {
 
         if (playerWins >= 2 || cpuWins >= 2) {
             isGameWon = playerWins >= 2;
-            subEl.textContent = isGameWon ? '🎉 恭喜過關！前往大獎輪盤' : '😊 轉安慰輪盤也有禮';
+            subEl.textContent = isGameWon ? '哇!! 好厲害　快來轉大獎輪盤' : '今天手氣差了一點點!!　請轉轉再加油輪盤吧';
             setTimeout(() => {
                 overlay.classList.remove('active');
                 goToWheel();
@@ -1414,7 +1508,7 @@ async function recordGame(prizeName) {
 function fireConfetti() {
     const container = document.getElementById('confetti');
     container.innerHTML = '';
-    const colors = ['#E63946', '#06A77D', '#FFB703', '#A8E6CF', '#FF8FA3', '#FFD166'];
+    const colors = ['#e41e07', '#940201', '#1198cd', '#0a6d85', '#ece0d8', '#b8dff0'];
     for (let i = 0; i < 80; i++) {
         const piece = document.createElement('div');
         piece.className = 'confetti-piece';
