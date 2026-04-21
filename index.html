@@ -732,11 +732,23 @@
             border-radius: 20px;
             border: 4px solid #FFF;
             box-shadow: 6px 6px 0 #2D3142;
-            margin-bottom: 28px;
+            margin-bottom: 14px;
             letter-spacing: 2px;
             max-width: 92vw;
             text-align: center;
             line-height: 1.3;
+        }
+        .result-code {
+            font-size: 34px;
+            font-weight: 900;
+            font-family: 'Consolas', 'Menlo', monospace;
+            letter-spacing: 6px;
+            color: #2D3142;
+            background: #fff;
+            padding: 8px 24px;
+            border: 3px dashed #940201;
+            border-radius: 12px;
+            margin-bottom: 18px;
         }
         .result-qr-box {
             background: #fff;
@@ -907,7 +919,8 @@
 
             /* Result */
             .result-congrats { font-size: 32px; margin-bottom: 6px; }
-            .result-prize-name { font-size: 22px; padding: 10px 20px; margin-bottom: 16px; letter-spacing: 1px; border-width: 3px; box-shadow: 4px 4px 0 #2D3142; line-height: 1.3; }
+            .result-prize-name { font-size: 22px; padding: 10px 20px; margin-bottom: 8px; letter-spacing: 1px; border-width: 3px; box-shadow: 4px 4px 0 #2D3142; line-height: 1.3; }
+            .result-code { font-size: 22px; padding: 6px 16px; letter-spacing: 4px; border-width: 2px; margin-bottom: 12px; }
             .result-qr-box { padding: 14px; margin-bottom: 12px; border-width: 3px; box-shadow: 5px 5px 0 #2D3142; }
             .result-qr-box canvas { width: 160px; height: 160px; }
             .result-scan-hint { font-size: 18px; margin-bottom: 4px; }
@@ -1076,6 +1089,7 @@
 <div class="screen" id="result-screen">
     <div class="result-congrats">🎉 恭喜獲得</div>
     <div class="result-prize-name" id="resultPrizeName">200元折價券</div>
+    <div class="result-code" id="resultCode" style="display:none;">------</div>
     <div class="result-qr-box">
         <canvas id="qrCanvas" width="220" height="220"></canvas>
     </div>
@@ -1096,21 +1110,21 @@
 // ===================================================================
 //  CONFIG
 // ===================================================================
-// 🏆 贏家獎池（機率合計 100%，375 場）
+// 🏆 贏家獎池（機率合計 100%，375 場）· id 必須與 gas/Code.gs 的 PRIZES 對齊
 const WIN_PRIZES = [
-    { wheel: '動態\n釋壓鞋',  name: 'DK 動態釋壓鞋 $1,280',   color: '#940201', prob: 8 },
-    { wheel: '五趾\n隱形襪',  name: 'DK 五趾隱形襪 $250',     color: '#1198cd', prob: 25 },
-    { wheel: '$500\n抵用金',  name: 'LINE $500 官網抵用金',   color: '#e41e07', prob: 20 },
-    { wheel: '7 折券',         name: 'LINE 門市 7 折券',        color: '#0a6d85', prob: 25 },
-    { wheel: '$500\n折價券',  name: 'LINE 門市 $500 折價券',   color: '#340101', prob: 22 },
+    { id: 'A0220',         wheel: '動態\n釋壓鞋',  name: 'DK 動態釋壓鞋 $1,280',   color: '#940201', prob: 8 },
+    { id: 'A0119',         wheel: '五趾\n隱形襪',  name: 'DK 五趾隱形襪 $250',     color: '#1198cd', prob: 25 },
+    { id: 'W_500_CASH',    wheel: '$500\n抵用金',  name: 'LINE $500 官網抵用金',   color: '#e41e07', prob: 20 },
+    { id: 'W_7_OFF',       wheel: '7 折券',         name: 'LINE 門市 7 折券',        color: '#0a6d85', prob: 25 },
+    { id: 'W_500_VOUCHER', wheel: '$500\n折價券',  name: 'LINE 門市 $500 折價券',   color: '#340101', prob: 22 },
 ];
 // 🎁 輸家 / 參加獎池（機率合計 100%，375 場）
 const LOSE_PRIZES = [
-    { wheel: '石墨烯\n袖套 🎊', name: 'A0003 石墨烯袖套 $680（隱藏）', color: '#340101', prob: 2.5 },
-    { wheel: '涼感\n底紗襪',   name: 'DK 涼感底紗襪 $180',     color: '#1198cd', prob: 20 },
-    { wheel: '$50\n抵用金',    name: 'LINE $50 官網抵用金',    color: '#e41e07', prob: 20 },
-    { wheel: '8 折券',          name: 'LINE 門市 8 折券',        color: '#0a6d85', prob: 27.5 },
-    { wheel: '$100\n折價券',   name: 'LINE 門市 $100 折價券',   color: '#940201', prob: 30 },
+    { id: 'A0003',         wheel: '石墨烯\n袖套 🎊', name: 'A0003 石墨烯袖套 $680（隱藏）', color: '#340101', prob: 2.5 },
+    { id: 'A0114',         wheel: '涼感\n底紗襪',   name: 'DK 涼感底紗襪 $180',     color: '#1198cd', prob: 20 },
+    { id: 'L_50_CASH',     wheel: '$50\n抵用金',    name: 'LINE $50 官網抵用金',    color: '#e41e07', prob: 20 },
+    { id: 'L_8_OFF',       wheel: '8 折券',          name: 'LINE 門市 8 折券',        color: '#0a6d85', prob: 27.5 },
+    { id: 'L_100_VOUCHER', wheel: '$100\n折價券',   name: 'LINE 門市 $100 折價券',   color: '#940201', prob: 30 },
 ];
 const GAS_URL = '';
 const LINE_QR_URL = 'https://line.me/R/ti/p/@dk-shoes';
@@ -1180,14 +1194,26 @@ async function submitPhone() {
     if (GAS_URL) {
         showLoading(true);
         try {
-            await fetch(GAS_URL, {
+            const resp = await fetch(GAS_URL, {
                 method: 'POST',
-                mode: 'no-cors',
+                mode: 'cors',
                 headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify({ action: 'check', phone: phoneNumber })
             });
-        } catch(e) { console.log('demo mode'); }
-        showLoading(false);
+            const data = await resp.json();
+            showLoading(false);
+            if (data.ok && data.canPlay === false) {
+                document.getElementById('phoneDisplay').classList.add('error');
+                document.getElementById('phoneError').textContent =
+                    data.reason === 'already_played_today'
+                        ? '此號碼今天已玩過，明天再來！'
+                        : '無法驗證手機號碼';
+                return;
+            }
+        } catch(e) {
+            console.warn('GAS check failed, continue in demo mode:', e);
+            showLoading(false);
+        }
     }
     resetRPS();
     showScreen('rps-screen');
@@ -1406,20 +1432,63 @@ function drawWheel(prizes) {
     ctx.restore();
 }
 
-function spinWheel() {
+async function spinWheel() {
     if (wheelSpinning) return;
     wheelSpinning = true;
     document.getElementById('spinBtn').disabled = true;
 
     const prizes = currentPrizes;
-    const totalProb = prizes.reduce((s, p) => s + p.prob, 0);
-    let rand = Math.random() * totalProb;
+
+    // --- 1. 決定要中哪個獎（伺服器決定，或本地 fallback） ---
     let winIndex = 0;
-    for (let i = 0; i < prizes.length; i++) {
-        rand -= prizes[i].prob;
-        if (rand <= 0) { winIndex = i; break; }
+    let drawnCode = '';
+    let drawnPrize = null;
+
+    if (GAS_URL) {
+        showLoading(true);
+        try {
+            const resp = await fetch(GAS_URL, {
+                method: 'POST',
+                mode: 'cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({
+                    action: 'draw',
+                    phone: phoneNumber,
+                    isWin: isGameWon
+                })
+            });
+            const data = await resp.json();
+            if (data.ok && data.prize) {
+                const idx = prizes.findIndex(p => p.id === data.prize.id);
+                if (idx >= 0) {
+                    winIndex = idx;
+                    drawnPrize = prizes[idx];
+                    drawnCode = data.code || '';
+                } else {
+                    // 伺服器回傳的獎項前端找不到（通常是 fallback）
+                    // 直接用伺服器回傳的資料，winIndex 隨機落一個視覺上的
+                    winIndex = _localDraw(prizes);
+                    drawnPrize = { name: data.prize.name, id: data.prize.id };
+                    drawnCode = data.code || '';
+                }
+            } else {
+                console.warn('GAS draw returned error, fallback to local', data);
+                winIndex = _localDraw(prizes);
+                drawnPrize = prizes[winIndex];
+            }
+        } catch (e) {
+            console.error('GAS draw failed, fallback to local:', e);
+            winIndex = _localDraw(prizes);
+            drawnPrize = prizes[winIndex];
+        }
+        showLoading(false);
+    } else {
+        // 純前端 demo 模式
+        winIndex = _localDraw(prizes);
+        drawnPrize = prizes[winIndex];
     }
 
+    // --- 2. 計算輪盤終點角度 ---
     const sliceAngle = 360 / prizes.length;
     const targetSliceCenter = winIndex * sliceAngle;
     const targetAngle = 360 - targetSliceCenter;
@@ -1431,6 +1500,7 @@ function spinWheel() {
     const duration = 4000;
     const startTime = performance.now();
 
+    // --- 3. 動畫到該角度 ---
     function animate(now) {
         const elapsed = now - startTime;
         const progress = Math.min(elapsed / duration, 1);
@@ -1441,19 +1511,42 @@ function spinWheel() {
             requestAnimationFrame(animate);
         } else {
             wheelSpinning = false;
-            setTimeout(() => showResult(prizes[winIndex]), 500);
+            setTimeout(() => showResult(drawnPrize, drawnCode), 500);
         }
     }
     requestAnimationFrame(animate);
 }
 
+function _localDraw(prizes) {
+    const totalProb = prizes.reduce((s, p) => s + p.prob, 0);
+    let rand = Math.random() * totalProb;
+    for (let i = 0; i < prizes.length; i++) {
+        rand -= prizes[i].prob;
+        if (rand <= 0) return i;
+    }
+    return prizes.length - 1;
+}
+
 // ===================================================================
 //  RESULT
 // ===================================================================
-function showResult(prize) {
+function showResult(prize, code) {
     document.getElementById('resultPrizeName').textContent = prize.name;
-    drawQRPlaceholder(prize.name);
-    recordGame(prize.name);
+    // 顯示兌換碼（若有）
+    const codeEl = document.getElementById('resultCode');
+    if (codeEl) {
+        if (code) {
+            codeEl.textContent = code;
+            codeEl.style.display = 'inline-block';
+        } else {
+            codeEl.style.display = 'none';
+        }
+    }
+    drawQRPlaceholder(code || prize.name);
+    // GAS 模式下 draw 已經寫入 Records，這裡只保留舊的 demo log
+    if (!GAS_URL) {
+        console.log('Demo:', { phone: phoneNumber, result: isGameWon ? '勝' : '敗', prize: prize.name });
+    }
     fireConfetti();
     showScreen('result-screen');
     // 無倒數 - 等店員按下「回到首頁」再離開
@@ -1491,25 +1584,6 @@ function drawQRPlaceholder(prizeName) {
     ctx.font = 'bold 12px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('DEMO QR', size/2, size/2 + 4);
-}
-
-async function recordGame(prizeName) {
-    if (!GAS_URL) {
-        console.log('Demo:', { phone: phoneNumber, result: isGameWon ? '勝' : '敗', prize: prizeName });
-        return;
-    }
-    try {
-        await fetch(GAS_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({
-                action: 'record', phone: phoneNumber,
-                result: isGameWon ? '勝' : '敗', prize: prizeName,
-                timestamp: new Date().toISOString()
-            })
-        });
-    } catch(e) { console.error('Record failed:', e); }
 }
 
 function fireConfetti() {
