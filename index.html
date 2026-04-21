@@ -151,17 +151,6 @@
             margin-bottom: 28px;
             position: relative;
         }
-        .welcome-sub::before,
-        .welcome-sub::after {
-            content: '★';
-            font-size: 22px;
-            color: #ece0d8;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .welcome-sub::before { left: 14px; }
-        .welcome-sub::after { right: 14px; }
         .welcome-desc {
             font-size: 26px;
             color: #2D3142;
@@ -867,7 +856,6 @@
             .welcome-title::before { font-size: 26px; top: -14px; right: -10px; }
             .welcome-title::after { font-size: 22px; bottom: -2px; left: -12px; }
             .welcome-sub { font-size: 20px; padding: 6px 30px; letter-spacing: 5px; margin-bottom: 20px; border-width: 2px; box-shadow: 0 3px 0 #083c49, 0 0 0 2px #1198cd; }
-            .welcome-sub::before, .welcome-sub::after { font-size: 14px; }
             .welcome-desc { font-size: 16px; margin-bottom: 18px; line-height: 1.6; }
             .welcome-prizes { gap: 8px; margin-bottom: 22px; }
             .prize-tag { font-size: 14px; padding: 6px 12px; border-width: 2px; box-shadow: 3px 3px 0 #2D3142; }
@@ -1004,12 +992,6 @@
         <div class="welcome-desc">
             不論輸贏，<span class="highlight">都有機會拿好禮</span>
         </div>
-        <div class="welcome-prizes">
-            <div class="prize-tag"><span>200元</span> 折價券</div>
-            <div class="prize-tag"><span>100元</span> 折價券</div>
-            <div class="prize-tag"><span>免費</span> 鞋墊券</div>
-            <div class="prize-tag"><span>50元</span> 折價券</div>
-        </div>
         <button class="btn-start" onclick="showScreen('phone-screen')">開始遊戲</button>
     </div>
 </div>
@@ -1053,17 +1035,6 @@
         <div class="score-box cpu">
             <div class="score-label">電腦</div>
             <div class="score-value" id="cpuScore">0</div>
-        </div>
-    </div>
-
-    <div class="rps-prize-info">
-        <div class="prize-panel win">
-            <div class="prize-panel-title">🏆 贏 → 大獎輪盤</div>
-            <div class="prize-panel-items">200元券 / 100元券 / 鞋墊 / 襪子</div>
-        </div>
-        <div class="prize-panel lose">
-            <div class="prize-panel-title">🎁 輸 → 安慰輪盤</div>
-            <div class="prize-panel-items">50元券 / 購物袋 / 鞋帶 / 保養品</div>
         </div>
     </div>
 
