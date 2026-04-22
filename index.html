@@ -1227,13 +1227,26 @@ function setRpsButtons(enabled) {
     document.querySelectorAll('.rps-btn').forEach(b => b.disabled = !enabled);
 }
 
+// 平手機率（公平隨機 = 33%，調降到 10% 加快遊戲節奏）
+// 剩下 90% 平均分配到「玩家贏」與「電腦贏」各 45%
+const TIE_PROBABILITY = 0.10;
+
+function pickCpuChoice(playerChoice) {
+    // 擲一次骰子決定「這局要不要平手」
+    if (Math.random() < TIE_PROBABILITY) {
+        return playerChoice;  // 故意跟玩家一樣 → 平手
+    }
+    // 否則從剩下兩個選項中隨機選（各 50%，整體仍是玩家 45% 贏 / 45% 輸）
+    const others = ['rock', 'scissors', 'paper'].filter(c => c !== playerChoice);
+    return others[Math.floor(Math.random() * others.length)];
+}
+
 function playRPS(playerChoice) {
     if (isRpsLocked) return;
     isRpsLocked = true;
     setRpsButtons(false);
 
-    const choices = ['rock', 'scissors', 'paper'];
-    const cpuChoice = choices[Math.floor(Math.random() * 3)];
+    const cpuChoice = pickCpuChoice(playerChoice);
     const result = getRPSResult(playerChoice, cpuChoice);
     showRoundOverlay(playerChoice, cpuChoice, result);
 }
