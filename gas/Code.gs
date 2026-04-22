@@ -219,13 +219,25 @@ function _allRecords() {
   if (last < 2) return [];
   const rows = sheet.getRange(2, 1, last - 1, 6).getValues();
   return rows.map(r => ({
-    date: String(r[0]),
+    date: _toDateStr(r[0]),
     phone: _normalizePhone(r[1]),
     result: r[2],
     prizeId: r[3],
     prizeName: r[4],
     code: r[5]
   }));
+}
+
+/**
+ * Google Sheets 會把 "2026-04-22" 這種字串自動轉成 Date 物件儲存
+ * 讀回來時需要統一格式成 yyyy-MM-dd 字串
+ */
+function _toDateStr(v) {
+  if (!v) return '';
+  if (v instanceof Date) {
+    return Utilities.formatDate(v, TZ, 'yyyy-MM-dd');
+  }
+  return String(v);
 }
 
 function _makeCode() {
@@ -267,6 +279,10 @@ function setupSheets() {
     records.setColumnWidth(7, 160);  // timestamp
     records.setColumnWidth(8, 80);   // status
   }
+  // ★ 強制 A 欄（date）為純文字格式，避免 Sheets 自動把 "2026-04-22" 轉成 Date 物件
+  records.getRange('A:A').setNumberFormat('@');
+  // B 欄（phone）也強制文字，避免 09xxxx 開頭 0 被吃掉
+  records.getRange('B:B').setNumberFormat('@');
 
   // 2) Prizes_Ref 參考表（只供查閱用，邏輯全在 Code.gs 的 PRIZES 常數）
   let prizes = ss.getSheetByName('Prizes_Ref');
