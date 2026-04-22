@@ -956,6 +956,9 @@
 </head>
 <body>
 
+<!-- QR Code 生成庫（輕量 pure JS，~5KB）-->
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+
 <div class="loading-overlay" id="loading">
     <div class="loading-spinner"></div>
     <div class="loading-text">驗證中...</div>
@@ -1097,20 +1100,21 @@
 //  CONFIG
 // ===================================================================
 // 🏆 贏家獎池（機率合計 100%，375 場）· id 必須與 gas/Code.gs 的 PRIZES 對齊
+// qrUrl = BotBonnie LINE 領獎連結，客人掃 QR 進 LINE 自動發券（會員帳號/POS 核銷）
 const WIN_PRIZES = [
-    { id: 'A0220',         wheel: '動態\n釋壓鞋',  name: 'DK 動態釋壓鞋 $1,280',   color: '#940201', prob: 8 },
-    { id: 'A0119',         wheel: '五趾\n隱形襪',  name: 'DK 五趾隱形襪 $250',     color: '#1198cd', prob: 25 },
-    { id: 'W_500_CASH',    wheel: '$500\n鞋款券',  name: '官網鞋款滿 $2,000 折 $500', color: '#e41e07', prob: 20 },
-    { id: 'W_7_OFF',       wheel: '7 折券',         name: '門市 7 折券',             color: '#0a6d85', prob: 25 },
-    { id: 'W_500_VOUCHER', wheel: '$500\n折價券',  name: '門市 $500 折價券',        color: '#340101', prob: 22 },
+    { id: 'A0220',         wheel: '動態\n足弓拖鞋',  name: 'DK 動態足弓拖鞋 $1,280',    color: '#940201', prob: 8,  qrUrl: 'https://r.botbonnie.com/nFBY3' },
+    { id: 'A0119',         wheel: '五趾\n隱形襪',   name: 'DK 五趾隱形襪 $250',        color: '#1198cd', prob: 25, qrUrl: 'https://r.botbonnie.com/e98OK' },
+    { id: 'W_500_CASH',    wheel: '$500\n鞋款券',   name: '官網鞋款滿 $2,000 折 $500', color: '#e41e07', prob: 20, qrUrl: 'https://r.botbonnie.com/2D9Kb' },
+    { id: 'W_7_OFF',       wheel: '7 折券',          name: '門市 7 折券',                color: '#0a6d85', prob: 25, qrUrl: 'https://r.botbonnie.com/eEnhg' },
+    { id: 'W_500_VOUCHER', wheel: '$500\n折價券',   name: '門市 $500 折價券',           color: '#340101', prob: 22, qrUrl: 'https://r.botbonnie.com/nN079' },
 ];
 // 🎁 輸家 / 參加獎池（機率合計 100%，375 場）
 const LOSE_PRIZES = [
-    { id: 'A0003',         wheel: '石墨烯\n袖套 🎊', name: 'A0003 石墨烯袖套 $680（隱藏）', color: '#340101', prob: 2.5 },
-    { id: 'A0114',         wheel: '涼感\n底紗襪',   name: 'DK 涼感底紗襪 $180',     color: '#1198cd', prob: 20 },
-    { id: 'L_50_CASH',     wheel: '$50\n抵用金',    name: '$50 官網抵用金',         color: '#e41e07', prob: 20 },
-    { id: 'L_8_OFF',       wheel: '8 折券',          name: '門市 8 折券',             color: '#0a6d85', prob: 27.5 },
-    { id: 'L_100_VOUCHER', wheel: '$100\n折價券',   name: '門市 $100 折價券',        color: '#940201', prob: 30 },
+    { id: 'A0003',         wheel: '石墨烯\n袖套 🎊', name: 'A0003 石墨烯袖套 $680（隱藏）', color: '#340101', prob: 2.5,  qrUrl: 'https://r.botbonnie.com/2gHx0' },
+    { id: 'A0114',         wheel: '涼感\n底紗襪',    name: 'DK 涼感底紗襪 $180',            color: '#1198cd', prob: 20,   qrUrl: 'https://r.botbonnie.com/xefy8' },
+    { id: 'L_50_CASH',     wheel: '$50\n抵用金',     name: '$50 官網抵用金',                color: '#e41e07', prob: 20,   qrUrl: 'https://r.botbonnie.com/wKL-A' },
+    { id: 'L_8_OFF',       wheel: '8 折券',           name: '門市 8 折券',                    color: '#0a6d85', prob: 27.5, qrUrl: 'https://r.botbonnie.com/JtNDG' },
+    { id: 'L_100_VOUCHER', wheel: '$100\n折價券',    name: '門市 $100 折價券',               color: '#940201', prob: 30,   qrUrl: 'https://r.botbonnie.com/ppMb_' },
 ];
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbwk5U3ph78RaTtNCDLFvA3POOtEj_TC57_D8TJilYoSk_qEsbb9O_AyQpOM9usjUXeG/exec';
 const LINE_QR_URL = 'https://line.me/R/ti/p/@dk-shoes';
@@ -1532,48 +1536,73 @@ function _localDraw(prizes) {
 function showResult(prize, code) {
     document.getElementById('resultPrizeName').textContent = prize.name;
     // code 由 GAS 產生並寫入 Records 供後台稽核，前端不顯示給客人看
-    // （LINE 發券流程不需要客人手動輸入兌換碼）
-    drawQRPlaceholder(prize.id || prize.name);
+
+    // 依 prize.id 從本地陣列找對應的 qrUrl
+    const prizesArr = isGameWon ? WIN_PRIZES : LOSE_PRIZES;
+    const localPrize = prizesArr.find(p => p.id === prize.id);
+    const qrUrl = localPrize ? localPrize.qrUrl : null;
+    drawQRCode(qrUrl);
+
     if (!GAS_URL) {
-        console.log('Demo:', { phone: phoneNumber, result: isGameWon ? '勝' : '敗', prize: prize.name });
+        console.log('Demo:', { phone: phoneNumber, result: isGameWon ? '勝' : '敗', prize: prize.name, qrUrl });
     }
     fireConfetti();
     showScreen('result-screen');
     // 無倒數 - 等店員按下「回到首頁」再離開
 }
 
-function drawQRPlaceholder(prizeName) {
+/**
+ * 產生真實可掃的 QR Code
+ * @param {string} url - 要編碼的連結（例如 BotBonnie LINE 領獎 URL）
+ */
+function drawQRCode(url) {
     const canvas = document.getElementById('qrCanvas');
     const ctx = canvas.getContext('2d');
     const size = 220;
+
+    // 清底
     ctx.fillStyle = '#FFF';
     ctx.fillRect(0, 0, size, size);
-    ctx.fillStyle = '#000';
-    const modules = 21;
-    const moduleSize = (size - 20) / modules;
-    const offset = 10;
-    const seed = prizeName.length * 7 + 42;
-    for (let row = 0; row < modules; row++) {
-        for (let col = 0; col < modules; col++) {
-            const inTopLeft = row < 7 && col < 7;
-            const inTopRight = row < 7 && col >= modules - 7;
-            const inBottomLeft = row >= modules - 7 && col < 7;
-            if (inTopLeft || inTopRight || inBottomLeft) {
-                const lr = row % 7 < 1 || row % 7 > 5 || col % 7 < 1 || col % 7 > 5 ||
-                           (row % 7 >= 2 && row % 7 <= 4 && col % 7 >= 2 && col % 7 <= 4);
-                if (lr) ctx.fillRect(offset + col * moduleSize, offset + row * moduleSize, moduleSize, moduleSize);
-            } else {
-                const hash = ((row * 31 + col * 17 + seed) * 2654435761) >>> 0;
-                if (hash % 3 !== 0) ctx.fillRect(offset + col * moduleSize, offset + row * moduleSize, moduleSize, moduleSize);
+
+    // 如果沒有 URL（獎品未設定領獎連結），顯示提示
+    if (!url) {
+        ctx.fillStyle = '#940201';
+        ctx.font = 'bold 18px "Microsoft JhengHei"';
+        ctx.textAlign = 'center';
+        ctx.fillText('📋 此獎品', size/2, size/2 - 16);
+        ctx.fillText('請至櫃檯領取', size/2, size/2 + 14);
+        return;
+    }
+
+    // qrcode-generator: typeNumber 0=自動, errorCorrectLevel M(15%)
+    try {
+        const qr = qrcode(0, 'M');
+        qr.addData(url);
+        qr.make();
+        const modules = qr.getModuleCount();
+        const moduleSize = size / modules;
+
+        ctx.fillStyle = '#000';
+        for (let row = 0; row < modules; row++) {
+            for (let col = 0; col < modules; col++) {
+                if (qr.isDark(row, col)) {
+                    ctx.fillRect(
+                        Math.floor(col * moduleSize),
+                        Math.floor(row * moduleSize),
+                        Math.ceil(moduleSize),
+                        Math.ceil(moduleSize)
+                    );
+                }
             }
         }
+    } catch (e) {
+        console.error('QR generation failed:', e);
+        ctx.fillStyle = '#940201';
+        ctx.font = 'bold 16px "Microsoft JhengHei"';
+        ctx.textAlign = 'center';
+        ctx.fillText('QR 產生失敗', size/2, size/2 - 8);
+        ctx.fillText('請找店員協助', size/2, size/2 + 16);
     }
-    ctx.fillStyle = 'rgba(0,0,0,0.7)';
-    ctx.fillRect(size/2 - 50, size/2 - 13, 100, 26);
-    ctx.fillStyle = '#FFF';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('DEMO QR', size/2, size/2 + 4);
 }
 
 function fireConfetti() {
