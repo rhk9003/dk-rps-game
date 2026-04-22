@@ -23,7 +23,7 @@
  */
 
 // ★ 部署前必填：Google Sheet ID
-const SHEET_ID = 'PASTE_YOUR_SHEET_ID_HERE';
+const SHEET_ID = '1hrvHmJDtCNqVAaJWVXm_N2-FxJ5OTqBVHhKs1kAtN0w';
 
 const TZ = 'Asia/Taipei';
 
