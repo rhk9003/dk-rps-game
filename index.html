@@ -732,23 +732,11 @@
             border-radius: 20px;
             border: 4px solid #FFF;
             box-shadow: 6px 6px 0 #2D3142;
-            margin-bottom: 14px;
+            margin-bottom: 28px;
             letter-spacing: 2px;
             max-width: 92vw;
             text-align: center;
             line-height: 1.3;
-        }
-        .result-code {
-            font-size: 34px;
-            font-weight: 900;
-            font-family: 'Consolas', 'Menlo', monospace;
-            letter-spacing: 6px;
-            color: #2D3142;
-            background: #fff;
-            padding: 8px 24px;
-            border: 3px dashed #940201;
-            border-radius: 12px;
-            margin-bottom: 18px;
         }
         .result-qr-box {
             background: #fff;
@@ -919,8 +907,7 @@
 
             /* Result */
             .result-congrats { font-size: 32px; margin-bottom: 6px; }
-            .result-prize-name { font-size: 22px; padding: 10px 20px; margin-bottom: 8px; letter-spacing: 1px; border-width: 3px; box-shadow: 4px 4px 0 #2D3142; line-height: 1.3; }
-            .result-code { font-size: 22px; padding: 6px 16px; letter-spacing: 4px; border-width: 2px; margin-bottom: 12px; }
+            .result-prize-name { font-size: 22px; padding: 10px 20px; margin-bottom: 16px; letter-spacing: 1px; border-width: 3px; box-shadow: 4px 4px 0 #2D3142; line-height: 1.3; }
             .result-qr-box { padding: 14px; margin-bottom: 12px; border-width: 3px; box-shadow: 5px 5px 0 #2D3142; }
             .result-qr-box canvas { width: 160px; height: 160px; }
             .result-scan-hint { font-size: 18px; margin-bottom: 4px; }
@@ -1089,7 +1076,6 @@
 <div class="screen" id="result-screen">
     <div class="result-congrats">🎉 恭喜獲得</div>
     <div class="result-prize-name" id="resultPrizeName">200元折價券</div>
-    <div class="result-code" id="resultCode" style="display:none;">------</div>
     <div class="result-qr-box">
         <canvas id="qrCanvas" width="220" height="220"></canvas>
     </div>
@@ -1114,17 +1100,17 @@
 const WIN_PRIZES = [
     { id: 'A0220',         wheel: '動態\n釋壓鞋',  name: 'DK 動態釋壓鞋 $1,280',   color: '#940201', prob: 8 },
     { id: 'A0119',         wheel: '五趾\n隱形襪',  name: 'DK 五趾隱形襪 $250',     color: '#1198cd', prob: 25 },
-    { id: 'W_500_CASH',    wheel: '$500\n抵用金',  name: 'LINE $500 官網抵用金',   color: '#e41e07', prob: 20 },
-    { id: 'W_7_OFF',       wheel: '7 折券',         name: 'LINE 門市 7 折券',        color: '#0a6d85', prob: 25 },
-    { id: 'W_500_VOUCHER', wheel: '$500\n折價券',  name: 'LINE 門市 $500 折價券',   color: '#340101', prob: 22 },
+    { id: 'W_500_CASH',    wheel: '$500\n抵用金',  name: '$500 官網抵用金',        color: '#e41e07', prob: 20 },
+    { id: 'W_7_OFF',       wheel: '7 折券',         name: '門市 7 折券',             color: '#0a6d85', prob: 25 },
+    { id: 'W_500_VOUCHER', wheel: '$500\n折價券',  name: '門市 $500 折價券',        color: '#340101', prob: 22 },
 ];
 // 🎁 輸家 / 參加獎池（機率合計 100%，375 場）
 const LOSE_PRIZES = [
     { id: 'A0003',         wheel: '石墨烯\n袖套 🎊', name: 'A0003 石墨烯袖套 $680（隱藏）', color: '#340101', prob: 2.5 },
     { id: 'A0114',         wheel: '涼感\n底紗襪',   name: 'DK 涼感底紗襪 $180',     color: '#1198cd', prob: 20 },
-    { id: 'L_50_CASH',     wheel: '$50\n抵用金',    name: 'LINE $50 官網抵用金',    color: '#e41e07', prob: 20 },
-    { id: 'L_8_OFF',       wheel: '8 折券',          name: 'LINE 門市 8 折券',        color: '#0a6d85', prob: 27.5 },
-    { id: 'L_100_VOUCHER', wheel: '$100\n折價券',   name: 'LINE 門市 $100 折價券',   color: '#940201', prob: 30 },
+    { id: 'L_50_CASH',     wheel: '$50\n抵用金',    name: '$50 官網抵用金',         color: '#e41e07', prob: 20 },
+    { id: 'L_8_OFF',       wheel: '8 折券',          name: '門市 8 折券',             color: '#0a6d85', prob: 27.5 },
+    { id: 'L_100_VOUCHER', wheel: '$100\n折價券',   name: '門市 $100 折價券',        color: '#940201', prob: 30 },
 ];
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxN07TYtBejloOhIp1-BFZI18Nn4UUPqcx-Fm72oUbqNxG9fv4lM7-P98ue0UyA5R52/exec';
 const LINE_QR_URL = 'https://line.me/R/ti/p/@dk-shoes';
@@ -1532,18 +1518,9 @@ function _localDraw(prizes) {
 // ===================================================================
 function showResult(prize, code) {
     document.getElementById('resultPrizeName').textContent = prize.name;
-    // 顯示兌換碼（若有）
-    const codeEl = document.getElementById('resultCode');
-    if (codeEl) {
-        if (code) {
-            codeEl.textContent = code;
-            codeEl.style.display = 'inline-block';
-        } else {
-            codeEl.style.display = 'none';
-        }
-    }
-    drawQRPlaceholder(code || prize.name);
-    // GAS 模式下 draw 已經寫入 Records，這裡只保留舊的 demo log
+    // code 由 GAS 產生並寫入 Records 供後台稽核，前端不顯示給客人看
+    // （LINE 發券流程不需要客人手動輸入兌換碼）
+    drawQRPlaceholder(prize.id || prize.name);
     if (!GAS_URL) {
         console.log('Demo:', { phone: phoneNumber, result: isGameWon ? '勝' : '敗', prize: prize.name });
     }

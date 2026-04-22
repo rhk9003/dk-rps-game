@@ -36,16 +36,16 @@ const PRIZES = [
   // 🏆 贏家池（100% / 375 場）
   { id: 'A0220',         pool: 'win', name: 'DK 動態釋壓鞋 $1,280',  prob: 8,    totalLimit: 30, dailyLimit: 1,  fallback: 'W_500_VOUCHER' },
   { id: 'A0119',         pool: 'win', name: 'DK 五趾隱形襪 $250',    prob: 25,   totalLimit: 60, dailyLimit: 2,  fallback: 'W_500_VOUCHER' },
-  { id: 'W_500_CASH',    pool: 'win', name: 'LINE $500 官網抵用金',  prob: 20,   totalLimit: -1, dailyLimit: -1 },
-  { id: 'W_7_OFF',       pool: 'win', name: 'LINE 門市 7 折券',      prob: 25,   totalLimit: -1, dailyLimit: -1 },
-  { id: 'W_500_VOUCHER', pool: 'win', name: 'LINE 門市 $500 折價券', prob: 22,   totalLimit: -1, dailyLimit: -1 },
+  { id: 'W_500_CASH',    pool: 'win', name: '$500 官網抵用金',       prob: 20,   totalLimit: -1, dailyLimit: -1 },
+  { id: 'W_7_OFF',       pool: 'win', name: '門市 7 折券',            prob: 25,   totalLimit: -1, dailyLimit: -1 },
+  { id: 'W_500_VOUCHER', pool: 'win', name: '門市 $500 折價券',       prob: 22,   totalLimit: -1, dailyLimit: -1 },
 
   // 🎁 輸家 / 參加池（100% / 375 場）
   { id: 'A0003',         pool: 'lose', name: 'A0003 石墨烯袖套 $680（隱藏）', prob: 2.5, totalLimit: 10, dailyLimit: -1, fallback: 'A0114' },
   { id: 'A0114',         pool: 'lose', name: 'DK 涼感底紗襪 $180',    prob: 20,   totalLimit: 60, dailyLimit: 2,  fallback: 'L_100_VOUCHER' },
-  { id: 'L_50_CASH',     pool: 'lose', name: 'LINE $50 官網抵用金',   prob: 20,   totalLimit: -1, dailyLimit: -1 },
-  { id: 'L_8_OFF',       pool: 'lose', name: 'LINE 門市 8 折券',       prob: 27.5, totalLimit: -1, dailyLimit: -1 },
-  { id: 'L_100_VOUCHER', pool: 'lose', name: 'LINE 門市 $100 折價券',  prob: 30,   totalLimit: -1, dailyLimit: -1 },
+  { id: 'L_50_CASH',     pool: 'lose', name: '$50 官網抵用金',        prob: 20,   totalLimit: -1, dailyLimit: -1 },
+  { id: 'L_8_OFF',       pool: 'lose', name: '門市 8 折券',            prob: 27.5, totalLimit: -1, dailyLimit: -1 },
+  { id: 'L_100_VOUCHER', pool: 'lose', name: '門市 $100 折價券',       prob: 30,   totalLimit: -1, dailyLimit: -1 },
 ];
 
 // ====================================================================
