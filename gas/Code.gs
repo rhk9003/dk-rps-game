@@ -148,14 +148,15 @@ function draw(phone, isWin) {
   const code = _makeCode();
 
   // 7. 寫入 Records
+  // ★ 手機號碼與日期加 ' 前綴強制文字格式，避免 Sheets 吃掉開頭的 0 或把日期轉成 Date 物件
   _sheet('Records').appendRow([
-    today,                   // A: date
-    p,                       // B: phone
+    "'" + today,             // A: date（強制字串，不讓 Sheets 自動轉 Date）
+    "'" + p,                 // B: phone（強制字串，保留開頭的 0）
     isWin ? '勝' : '敗',      // C: result
     drawn.id,                // D: prize_id
     drawn.name,              // E: prize_name
     code,                    // F: code
-    new Date(),              // G: timestamp
+    new Date(),              // G: timestamp（這個保留成 Date 物件方便排序）
     '未兌換'                  // H: status（給店員人工更新）
   ]);
 
