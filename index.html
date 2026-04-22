@@ -792,58 +792,6 @@
             opacity: 1;
         }
 
-        /* ===== 評分模組（嵌在 result-screen 上）===== */
-        .rating-box {
-            background: #FFF;
-            border: 3px solid #2D3142;
-            border-radius: 22px;
-            padding: 14px 24px 16px;
-            margin-bottom: 16px;
-            box-shadow: 5px 5px 0 #2D3142;
-            text-align: center;
-            max-width: 420px;
-            width: 92%;
-        }
-        .rating-title {
-            font-size: 22px;
-            font-weight: 900;
-            color: #2D3142;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-        }
-        .rating-stars {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-        }
-        .rating-star {
-            font-size: 44px;
-            line-height: 1;
-            padding: 4px 6px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: #D4C7BC;
-            transition: transform 0.1s, color 0.15s;
-        }
-        .rating-star:active {
-            transform: scale(1.25);
-        }
-        .rating-star.filled {
-            color: #e41e07;
-        }
-        .rating-thanks {
-            display: none;
-            font-size: 22px;
-            font-weight: 900;
-            color: #1198cd;
-            padding: 8px 0 2px;
-            letter-spacing: 2px;
-        }
-        .rating-box.submitted .rating-stars { display: none; }
-        .rating-box.submitted .rating-title { display: none; }
-        .rating-box.submitted .rating-thanks { display: block; }
-
         /* ===== SCREEN 6: COOLDOWN ===== */
         #cooldown-screen {
             background:
@@ -965,10 +913,6 @@
             .result-scan-hint { font-size: 18px; margin-bottom: 4px; }
             .result-scan-sub { font-size: 13px; margin-bottom: 10px; }
             .result-tomorrow { font-size: 15px; padding: 7px 18px; margin-bottom: 10px; letter-spacing: 1px; border-width: 2px; box-shadow: 0 3px 0 #2D3142; }
-            .rating-box { padding: 10px 14px 12px; margin-bottom: 10px; border-width: 2px; box-shadow: 3px 3px 0 #2D3142; border-radius: 16px; }
-            .rating-title { font-size: 15px; margin-bottom: 6px; letter-spacing: 1px; }
-            .rating-star { font-size: 30px; padding: 2px 3px; }
-            .rating-thanks { font-size: 15px; padding: 4px 0 0; letter-spacing: 1px; }
             .btn-back-home { font-size: 14px; padding: 8px 22px; border-width: 2px; }
 
             /* Cooldown */
@@ -1141,17 +1085,6 @@
     <div class="result-scan-hint">📱 掃描 QR Code 加入 LINE 領獎</div>
     <div class="result-scan-sub">截圖無效，請現場掃描</div>
     <div class="result-tomorrow">🌅 明天再來玩　每天都有新驚喜！</div>
-    <div class="rating-box" id="ratingBox">
-        <div class="rating-title">今天玩得開心嗎？</div>
-        <div class="rating-stars" id="ratingStars">
-            <button class="rating-star" data-score="1" onclick="submitRating(1)">★</button>
-            <button class="rating-star" data-score="2" onclick="submitRating(2)">★</button>
-            <button class="rating-star" data-score="3" onclick="submitRating(3)">★</button>
-            <button class="rating-star" data-score="4" onclick="submitRating(4)">★</button>
-            <button class="rating-star" data-score="5" onclick="submitRating(5)">★</button>
-        </div>
-        <div class="rating-thanks">🙏 感謝你的回饋</div>
-    </div>
     <button class="btn-back-home" onclick="resetAll()">🏠 店員：回到首頁</button>
 </div>
 
@@ -1197,8 +1130,6 @@ let cpuWins = 0;
 let roundNumber = 1;
 let isRpsLocked = false;
 let isGameWon = false;
-let currentDrawCode = '';
-let ratingSubmitted = false;
 
 const RPS_EMOJI = { rock: '✊', scissors: '✌️', paper: '🖐️' };
 
@@ -1605,8 +1536,6 @@ function _localDraw(prizes) {
 function showResult(prize, code) {
     document.getElementById('resultPrizeName').textContent = prize.name;
     // code 由 GAS 產生並寫入 Records 供後台稽核，前端不顯示給客人看
-    currentDrawCode = code || '';
-    resetRatingUI();
 
     // 依 prize.id 從本地陣列找對應的 qrUrl
     const prizesArr = isGameWon ? WIN_PRIZES : LOSE_PRIZES;
@@ -1693,54 +1622,6 @@ function fireConfetti() {
         container.appendChild(piece);
     }
     setTimeout(() => container.innerHTML = '', 4000);
-}
-
-// ===================================================================
-//  RATING
-// ===================================================================
-function resetRatingUI() {
-    ratingSubmitted = false;
-    const box = document.getElementById('ratingBox');
-    if (!box) return;
-    box.classList.remove('submitted');
-    document.querySelectorAll('.rating-star').forEach(s => {
-        s.classList.remove('filled');
-        s.disabled = false;
-    });
-}
-
-function submitRating(score) {
-    if (ratingSubmitted) return;
-    ratingSubmitted = true;
-
-    // 先把星星點亮（樂觀更新）
-    document.querySelectorAll('.rating-star').forEach(s => {
-        const v = Number(s.dataset.score);
-        s.classList.toggle('filled', v <= score);
-        s.disabled = true;
-    });
-
-    // 短暫停留讓客人看到星星反饋，再切成感謝狀態
-    setTimeout(() => {
-        document.getElementById('ratingBox').classList.add('submitted');
-    }, 400);
-
-    // fire-and-forget：評分失敗不影響客人流程
-    if (GAS_URL) {
-        fetch(GAS_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({
-                action: 'rate',
-                phone: phoneNumber,
-                code: currentDrawCode,
-                score: score
-            })
-        }).catch(e => console.warn('rate failed:', e));
-    } else {
-        console.log('Demo rating:', { phone: phoneNumber, code: currentDrawCode, score });
-    }
 }
 
 // ===================================================================

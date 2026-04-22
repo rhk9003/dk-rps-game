@@ -58,7 +58,6 @@ function doPost(e) {
 
     if (action === 'check') return _json(check(data.phone));
     if (action === 'draw')  return _json(draw(data.phone, !!data.isWin));
-    if (action === 'rate')  return _json(rate(data.phone, data.code, data.score));
     if (action === 'stats') return _json(getStats());
 
     return _json({ ok: false, error: 'unknown action: ' + action });
@@ -199,34 +198,6 @@ function getStats() {
 }
 
 // ====================================================================
-//  action: rate  —— 客人對這局遊戲的滿意度評分（1~5 星）
-//  以 draw 產出的 code 為 key，方便對齊 Records
-// ====================================================================
-function rate(phone, code, score) {
-  const p = _normalizePhone(phone);
-  const s = Number(score);
-  if (!(s >= 1 && s <= 5)) {
-    return { ok: false, error: 'invalid_score' };
-  }
-
-  const sheet = _sheet('Ratings');
-  if (!sheet) {
-    // 若尚未跑過 setupSheets()，靜默失敗（不影響客人流程）
-    return { ok: false, error: 'ratings_sheet_missing' };
-  }
-
-  sheet.appendRow([
-    "'" + _today(),          // A: date（強制字串）
-    "'" + p,                 // B: phone（強制字串）
-    code || '',              // C: draw_code（對應 Records!F）
-    s,                       // D: score 1~5
-    new Date()               // E: timestamp
-  ]);
-
-  return { ok: true };
-}
-
-// ====================================================================
 //  Helpers
 // ====================================================================
 function _sheet(name) {
@@ -361,27 +332,7 @@ function setupSheets() {
   dash.setFrozenRows(1);
   dash.autoResizeColumns(1, 6);
 
-  // 4) Ratings 評分表
-  let ratings = ss.getSheetByName('Ratings');
-  if (!ratings) ratings = ss.insertSheet('Ratings');
-  if (ratings.getLastRow() === 0) {
-    const rHeaders = ['date', 'phone', 'draw_code', 'score', 'timestamp'];
-    ratings.appendRow(rHeaders);
-    ratings.getRange(1, 1, 1, rHeaders.length)
-      .setFontWeight('bold')
-      .setBackground('#2D3142')
-      .setFontColor('#ffffff');
-    ratings.setFrozenRows(1);
-    ratings.setColumnWidth(1, 90);   // date
-    ratings.setColumnWidth(2, 110);  // phone
-    ratings.setColumnWidth(3, 90);   // draw_code
-    ratings.setColumnWidth(4, 60);   // score
-    ratings.setColumnWidth(5, 160);  // timestamp
-  }
-  ratings.getRange('A:A').setNumberFormat('@');
-  ratings.getRange('B:B').setNumberFormat('@');
-
-  SpreadsheetApp.getUi().alert('✅ 初始化完成！\n已建立：Records / Prizes_Ref / Dashboard / Ratings 四個分頁');
+  SpreadsheetApp.getUi().alert('✅ 初始化完成！\n已建立：Records / Prizes_Ref / Dashboard 三個分頁');
 }
 
 // ====================================================================
@@ -401,8 +352,4 @@ function _test_draw_lose() {
 
 function _test_stats() {
   console.log(JSON.stringify(getStats(), null, 2));
-}
-
-function _test_rate() {
-  console.log(rate('0912345678', 'TEST01', 5));
 }
