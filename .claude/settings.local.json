@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/drkao/Downloads/**)",
+      "Bash(python -m markitdown \"DK府中店_滿意度調查分析_含相關性.pptx\")",
+      "Bash(python scripts/office/soffice.py --headless --convert-to pdf \"DK府中店_滿意度調查分析_含相關性.pptx\")",
+      "Bash(python -c ':*)",
+      "Bash(python -m markitdown \"C:/Users/drkao/Downloads/府中店輪盤文字調整.pptx\")",
+      "Bash(mkdir -p \"C:/Users/drkao/Desktop/遊戲設計/.claude/tmp\")",
+      "Bash(cp /tmp/img1.png \"C:/Users/drkao/Desktop/遊戲設計/.claude/tmp/img1.png\")",
+      "Bash(cp /tmp/img3.png \"C:/Users/drkao/Desktop/遊戲設計/.claude/tmp/img3.png\")",
+      "Bash(cp \"C:/Users/drkao/Desktop/遊戲設計/.claude/tmp/府中店開幕活動_獎項總覽.jpg\" \"C:/Users/drkao/Desktop/府中店開幕活動_獎項總覽.jpg\")",
+      "Read(//c/Users/drkao/Desktop/**)"
+    ]
+  }
+}
