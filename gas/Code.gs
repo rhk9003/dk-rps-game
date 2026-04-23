@@ -336,6 +336,39 @@ function setupSheets() {
 }
 
 // ====================================================================
+//  ⚠️ 清空 Records（測試後 / 活動結算後歸零用）
+//  Dashboard 用公式算的會自動歸零，不用手動處理
+// ====================================================================
+function clearRecords() {
+  if (SHEET_ID === 'PASTE_YOUR_SHEET_ID_HERE') {
+    throw new Error('請先在 Code.gs 頂部填入 SHEET_ID');
+  }
+  const sheet = _sheet('Records');
+  if (!sheet) {
+    SpreadsheetApp.getUi().alert('找不到 Records 分頁，請先執行 setupSheets()');
+    return;
+  }
+  const last = sheet.getLastRow();
+  if (last <= 1) {
+    SpreadsheetApp.getUi().alert('Records 已經是空的，沒東西可清');
+    return;
+  }
+  const count = last - 1;
+  const ui = SpreadsheetApp.getUi();
+  const resp = ui.alert(
+    '⚠️ 確認清空 Records？',
+    '將刪除 ' + count + ' 筆遊戲紀錄（保留表頭）。\n\n此動作無法復原，確定要繼續嗎？',
+    ui.ButtonSet.YES_NO
+  );
+  if (resp !== ui.Button.YES) {
+    ui.alert('已取消，資料保留');
+    return;
+  }
+  sheet.getRange(2, 1, count, sheet.getLastColumn()).clearContent();
+  ui.alert('✅ 已清除 ' + count + ' 筆紀錄\nDashboard 庫存會自動歸零（重新整理 Sheet 就看到最新狀態）');
+}
+
+// ====================================================================
 //  本機測試（在 Apps Script 編輯器直接執行就可以）
 // ====================================================================
 function _test_check() {
