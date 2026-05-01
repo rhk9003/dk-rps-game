@@ -130,7 +130,7 @@ const GAS_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXX/exec';
 1. **機率在伺服器決定** → 無法用 DevTools 改機率
 2. **每日上限跨裝置** → 3 台平板共享同一支 Sheet 的計數
 3. **手機每天限一次** → 用 Records 的 (date + phone) 判斷
-4. **A0003 抽完自動改發 A0114** → `fallback` 欄位自動處理
+4. **實體獎抽完自動改發 fallback** → `fallback` 欄位自動處理（純 LINE 券不會缺貨）
 5. **兌換碼 6 碼** → 避開 0/O/1/I 等易混淆字元
 
 ---

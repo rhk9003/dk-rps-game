@@ -6,7 +6,7 @@
  *   1. 驗證手機號碼（每支每天限玩一次）
  *   2. 伺服器端抽獎（依機率 + 庫存 + 每日上限）
  *   3. 寫入遊戲紀錄到 Google Sheet
- *   4. A0003 / 實體獎抽完自動改發 fallback
+ *   4. 實體獎抽完自動改發 fallback（純 LINE 券，不會缺貨）
  * --------------------------------------------------------------------
  * 部署步驟：
  *   1. 新建 Google Sheet（隨意命名，例如「DK府中店_猜拳紀錄」）
@@ -40,8 +40,7 @@ const PRIZES = [
   { id: 'W_7_OFF',       pool: 'win', name: '門市 7 折券',            prob: 25,   totalLimit: -1, dailyLimit: -1 },
   { id: 'W_500_VOUCHER', pool: 'win', name: '門市 $500 折價券',       prob: 22,   totalLimit: -1, dailyLimit: -1 },
 
-  // 🎁 輸家 / 參加池（100% / 375 場）
-  { id: 'A0003',         pool: 'lose', name: 'A0003 石墨烯袖套 $680（隱藏）', prob: 2.5, totalLimit: 10, dailyLimit: -1, fallback: 'A0114' },
+  // 🎁 輸家 / 參加池
   { id: 'A0114',         pool: 'lose', name: 'DK 涼感底紗襪 $180',    prob: 20,   totalLimit: 60, dailyLimit: 2,  fallback: 'L_100_VOUCHER' },
   { id: 'L_50_CASH',     pool: 'lose', name: '$50 官網抵用金',        prob: 20,   totalLimit: -1, dailyLimit: -1 },
   { id: 'L_8_OFF',       pool: 'lose', name: '門市 8 折券',            prob: 27.5, totalLimit: -1, dailyLimit: -1 },
