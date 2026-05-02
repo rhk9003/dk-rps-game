@@ -1491,8 +1491,9 @@ async function spinWheel() {
     }
 
     // --- 2. 計算輪盤終點角度 ---
+    // ★ 必須加 sliceAngle/2 對齊到扇形中心，否則指針會落在格與格交界，randomOffset 一抖就跨格 → 視覺與獎項不一致
     const sliceAngle = 360 / prizes.length;
-    const targetSliceCenter = winIndex * sliceAngle;
+    const targetSliceCenter = winIndex * sliceAngle + sliceAngle / 2;
     const targetAngle = 360 - targetSliceCenter;
     const extraSpins = 5 * 360;
     const randomOffset = (Math.random() - 0.5) * (sliceAngle * 0.6);
