@@ -1121,6 +1121,48 @@ const RESULT_DISPLAY_SEC = 30;
 const COOLDOWN_SEC = 10;
 
 // ===================================================================
+//  IDLE ATTRACT 系統（welcome 畫面 idle 時呼叫路人）
+// ===================================================================
+const ATTRACT_AUDIOS = [
+    './assets/audio/attract_1.mp3',
+    './assets/audio/attract_2.mp3',
+    './assets/audio/attract_3.mp3',
+];
+const ATTRACT_INTERVAL_MS = 20000;
+let attractTimer = null;
+let attractAudioUnlocked = false;
+let lastAttractIdx = -1;
+
+function unlockAttractAudio() {
+    if (attractAudioUnlocked) return;
+    const a = new Audio(ATTRACT_AUDIOS[0]);
+    a.volume = 0;
+    a.play()
+        .then(() => { a.pause(); a.currentTime = 0; attractAudioUnlocked = true; })
+        .catch(() => {});
+}
+
+function playRandomAttract() {
+    if (!attractAudioUnlocked || ATTRACT_AUDIOS.length === 0) return;
+    let idx;
+    do {
+        idx = Math.floor(Math.random() * ATTRACT_AUDIOS.length);
+    } while (idx === lastAttractIdx && ATTRACT_AUDIOS.length > 1);
+    lastAttractIdx = idx;
+    const a = new Audio(ATTRACT_AUDIOS[idx]);
+    a.volume = 1.0;
+    a.play().catch(() => {});
+}
+
+function startAttract() {
+    stopAttract();
+    attractTimer = setInterval(playRandomAttract, ATTRACT_INTERVAL_MS);
+}
+function stopAttract() {
+    if (attractTimer) { clearInterval(attractTimer); attractTimer = null; }
+}
+
+// ===================================================================
 //  STATE
 // ===================================================================
 let phoneNumber = '';
@@ -1135,6 +1177,8 @@ const RPS_EMOJI = { rock: '✊', scissors: '✌️', paper: '🖐️' };
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    if (id === 'welcome') startAttract();
+    else stopAttract();
 }
 
 // ===================================================================
@@ -1654,6 +1698,21 @@ function resetAll() {
 }
 
 drawWheel(WIN_PRIZES);
+
+// 第一次觸控/點擊解鎖音訊（瀏覽器 autoplay policy）
+document.addEventListener('touchstart', unlockAttractAudio, { once: true, passive: true });
+document.addEventListener('click', unlockAttractAudio, { once: true });
+
+// welcome 畫面被觸控時 reset timer（避免使用者正在看時突然喊話）
+document.getElementById('welcome').addEventListener('touchstart', () => {
+    if (attractTimer) { stopAttract(); startAttract(); }
+}, { passive: true });
+document.getElementById('welcome').addEventListener('click', () => {
+    if (attractTimer) { stopAttract(); startAttract(); }
+});
+
+// 初始 welcome 已 active，啟動 attract 計時
+startAttract();
 </script>
 
 </body>
